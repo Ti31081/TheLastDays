@@ -25,7 +25,7 @@ import java.util.List;
 
 
 
-public class App extends Application {
+public class GUIMain extends Application {
         @Override
     public void start(Stage primaryStage) {
         
