@@ -60,11 +60,12 @@ public class GUIMain extends Application {
         scene.setOnKeyPressed(event -> {
             switch (event.getCode()) {
                 case D:
-                //if (charakter.getImageView().getX() + 90 ) {
-                    
-                //}
-                charakter.getImageView().setX(charakter.getImageView().getX() + 10);
-                System.out.println(charakter.getImageView().getX() + 90 + "px");
+                if (charakter.getImageView().getX() + 90 <=890) {
+                    charakter.getImageView().setX(charakter.getImageView().getX() + 10);
+                }
+                if (charakter.getImageView().getX() + 90 >= 890) {
+                    Grassblocks.verschiebeBlöcke();
+                }
                 // Kollisionsprüfung hier einfügen
                 
 
