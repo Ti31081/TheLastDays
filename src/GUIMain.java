@@ -78,9 +78,15 @@ public class GUIMain extends Application {
                     grassblocksAnzahl++;
                 }
                 break;
+                
                 case A:
                 charakter.getImageView().setX(charakter.getImageView().getX() - 10);
-                    break;
+                break;
+
+                case SPACE:
+                //jumping    
+                charakter.jumping();
+                break;
             }
         });
         

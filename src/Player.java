@@ -17,4 +17,18 @@ public class Player {
         return playerView;
     }
 
+    public void jumping(){
+        double startY = playerView.getY();
+        double jumpHeight = -110; // Negative value for upward movement
+        double jumpDuration = 400; // milliseconds
+        
+        javafx.animation.TranslateTransition jump = new javafx.animation.TranslateTransition();
+        jump.setNode(playerView);
+        jump.setDuration(javafx.util.Duration.millis(jumpDuration));
+        jump.setByY(jumpHeight);
+        jump.setCycleCount(2);
+        jump.setAutoReverse(true);
+        jump.play();
+    }
+
 }
