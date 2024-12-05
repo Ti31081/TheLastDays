@@ -8,6 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -61,7 +62,7 @@ public class GUIMain extends Application {
             switch (event.getCode()) {
                 case D:
                 if (charakter.getImageView().getX() + 90 <=890) {
-                    charakter.getImageView().setX(charakter.getImageView().getX() + 10);
+                    charakter.startMovingRight();
                 }
                 if (charakter.getImageView().getX() + 90 >= 890) {
                     Grassblocks.verschiebeBlöcke();
@@ -69,7 +70,7 @@ public class GUIMain extends Application {
                 // Kollisionsprüfung hier einfügen
                 
 
-                if(charakter.getImageView().getX() + 100 >= Grassblocks.getLastX() + 70) {
+                if(charakter.getImageView().getX() + 120 >= Grassblocks.getLastX() + 70) {
                     
                     Grassblocks grass = new Grassblocks(grassblocksAnzahl);
                     
@@ -77,16 +78,32 @@ public class GUIMain extends Application {
                     System.out.println("Neues Gras hinzugefügt");
                     grassblocksAnzahl++;
                 }
+
                 break;
                 
                 case A:
-                charakter.getImageView().setX(charakter.getImageView().getX() - 10);
+                charakter.startMovingLeft();
                 break;
 
                 case SPACE:
-                //jumping    
                 charakter.jumping();
                 break;
+            }
+            
+            
+        });
+
+        scene.setOnKeyReleased(event -> {
+            switch (event.getCode()) {
+                case D:
+                    charakter.stopMovingRight();
+                    break;
+                case A:
+                    charakter.stopMovingLeft();
+                    break;
+                case SPACE:
+                    charakter.stopJumping();
+                    break;
             }
         });
         

@@ -22,10 +22,15 @@ public class Grassblocks {
             this.imageView.setX(grassblocks.get(grassblocks.size() - 1).getImageView().getX() + 100);
         }
         grassblocks.add(this);
+        Map.Erstellung(this);
     }
 
     public ImageView getImageView() {
         return imageView;
+    }
+
+    public int getID(){
+        return id;
     }
 
     public static void verschiebeBlöcke(){
@@ -35,9 +40,14 @@ public class Grassblocks {
         if(grassblocks.get(0).getImageView().getX() < -100){
             grassblocks.remove(0); // Lösche den ersten Block, wenn er aus dem Bildschirm verfällt
         }
-    } 
+    }
+    
 
     public static double getLastX(){
         return grassblocks.get(grassblocks.size() - 1).getImageView().getX(); 
+    }
+
+    public static ArrayList<Grassblocks> getGrassblocks() {
+        return grassblocks;
     }
 }

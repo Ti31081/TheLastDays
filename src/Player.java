@@ -5,12 +5,15 @@ public class Player {
     private final Image grafik = new Image("file:rsc/manchen.png");
     private String name;
     private ImageView playerView = new ImageView(); 
+    private Collision collision;
 
     public Player(String name) {
         this.name = name;
         this.playerView.setImage(grafik);
         this.playerView.setFitHeight(200);
         this.playerView.setY(200);
+        this.playerView.setFitWidth(60);
+        this.collision = new Collision(this);
     }
 
     public ImageView getImageView(){
@@ -18,17 +21,28 @@ public class Player {
     }
 
     public void jumping(){
-        double startY = playerView.getY();
-        double jumpHeight = -110; // Negative value for upward movement
-        double jumpDuration = 400; // milliseconds
-        
-        javafx.animation.TranslateTransition jump = new javafx.animation.TranslateTransition();
-        jump.setNode(playerView);
-        jump.setDuration(javafx.util.Duration.millis(jumpDuration));
-        jump.setByY(jumpHeight);
-        jump.setCycleCount(2);
-        jump.setAutoReverse(true);
-        jump.play();
+        collision.startJump();
+    }
+    
+    public void stopJumping(){
+        collision.stopJump();
+    }
+
+
+    public void startMovingRight() {
+        collision.startMovingRight();
+    }
+
+    public void startMovingLeft() {
+        collision.startMovingLeft();
+    }
+
+    public void stopMovingRight() {
+        collision.stopMovingRight();
+    }
+
+    public void stopMovingLeft() {
+        collision.stopMovingLeft();
     }
 
 }
