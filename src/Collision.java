@@ -76,7 +76,7 @@ public class Collision {
         }
 
         // Position aktualisieren
-        double newX = player.getImageView().getX() + velocityX;
+        double newX = player.getImageView().getX() + velocityX; // hallo
 
         boolean canMove = true;
         for (Grassblocks block : Grassblocks.getGrassblocks()) {
