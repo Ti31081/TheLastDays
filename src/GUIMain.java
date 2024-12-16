@@ -28,6 +28,7 @@ public class GUIMain extends Application {
 
          // Abstand zwischen den Gras-Elementen
         Pane pane = new Pane();
+        //hallo ist ein test
         
         Player charakter = new Player("Tom");
         pane.getChildren().add(charakter.getImageView());
