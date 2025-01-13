@@ -17,7 +17,9 @@ import javafx.stage.Stage;
 public class GUIMain extends Application {
     
     private int quantity = 3;
-    private int grassblocksAnzahl = 0;
+    private static int grassblocksAnzahl = 0;
+    private static Player charakter = new Player("Tom");
+    private static Pane pane = new Pane();
 
     public void start(Stage primaryStage) {
         
@@ -27,10 +29,10 @@ public class GUIMain extends Application {
         
 
          // Abstand zwischen den Gras-Elementen
-        Pane pane = new Pane();
+        
         //hallo ist ein test
         
-        Player charakter = new Player("Tom");
+        
         pane.getChildren().add(charakter.getImageView());
         
         
@@ -62,15 +64,18 @@ public class GUIMain extends Application {
         scene.setOnKeyPressed(event -> {
             switch (event.getCode()) {
                 case D:
-                if (charakter.getImageView().getX() + 90 <=890) {
+                //if (charakter.getImageView().getX() + 90 <=890) {
                     charakter.startMovingRight();
-                }
-                if (charakter.getImageView().getX() + 90 >= 890) {
-                    Grassblocks.verschiebeBlöcke();
-                }
-                // Kollisionsprüfung hier einfügen
+                    
+               //}
+                //if (charakter.getImageView().getX() + 90 >= 890) {
+                   // charakter.stopMovingRight();
+                   // Grassblocks.verschiebeBlöcke();
+                   // grassPlazieren();
+               // }
                 
-
+                
+                /* 
                 if(charakter.getImageView().getX() + 120 >= Grassblocks.getLastX() + 70) {
                     
                     Grassblocks grass = new Grassblocks(grassblocksAnzahl);
@@ -79,6 +84,7 @@ public class GUIMain extends Application {
                     System.out.println("Neues Gras hinzugefügt");
                     grassblocksAnzahl++;
                 }
+                    */
 
                 break;
                 
@@ -116,6 +122,28 @@ public class GUIMain extends Application {
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public static void grassPlazieren(){
+        if(charakter.getImageView().getX() + 120 >= Grassblocks.getLastX() + 70) {
+                    
+            Grassblocks grass = new Grassblocks(grassblocksAnzahl);
+            
+            pane.getChildren().add(grass.getImageView());
+            System.out.println("Neues Gras hinzugefügt");
+            grassblocksAnzahl++;
+        }
+        
+    }
+    public static boolean weiterBewegen(){
+        if (charakter.getImageView().getX() + 90 >= 890) {
+            Grassblocks.verschiebeBlöcke();
+            grassPlazieren();
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
 

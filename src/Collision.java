@@ -7,7 +7,7 @@ public class Collision {
     private final double GRAVITY = 0.5;
     private final double JUMP_FORCE = -15;
     private final double MOVEMENT_SPEED = 0.5;
-    private final double MAX_SPEED = 8;
+    private final double MAX_SPEED = 4;
     private final double FRICTION = 0.8;
     private boolean canJump = false;
     private int jumpCounter = 0;
@@ -42,7 +42,11 @@ public class Collision {
     private void updateMovement() {
         // Beschleunigung basierend auf Eingabe
         if (movingRight) {
-            velocityX += MOVEMENT_SPEED;
+            
+            if (!GUIMain.weiterBewegen()) {
+                velocityX += MOVEMENT_SPEED;
+                GUIMain.grassPlazieren();
+            }
         }
         if (movingLeft) {
             velocityX -= MOVEMENT_SPEED;
