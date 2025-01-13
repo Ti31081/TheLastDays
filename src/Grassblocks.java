@@ -5,7 +5,8 @@ import javafx.scene.image.ImageView;
 
 public class Grassblocks {
     private static ArrayList<Grassblocks> grassblocks = new ArrayList<Grassblocks>();
-    private final Image grassImage = new Image("file:rsc/grass.png");
+    //private final Image grassImage = new Image("file:rsc/grass.png");
+    private final Image grassImage = new Image("file:rsc/grass2.png");
     private ImageView imageView = new ImageView();
     private int id;
 
@@ -35,7 +36,7 @@ public class Grassblocks {
 
     public static void verschiebeBlöcke(){
         for(Grassblocks block : grassblocks){
-            block.getImageView().setX(block.getImageView().getX() - 10); // Verändert die X-Koordinate um 5 Pixel
+            block.getImageView().setX(block.getImageView().getX() - 5); // Verändert die X-Koordinate um 5 Pixel
         }
         if(grassblocks.get(0).getImageView().getX() < -100){
             grassblocks.remove(0); // Lösche den ersten Block, wenn er aus dem Bildschirm verfällt

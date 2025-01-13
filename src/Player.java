@@ -2,7 +2,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class Player {
-    private final Image grafik = new Image("file:rsc/manchen.png");
+    //private final Image grafik = new Image("file:rsc/manchen.png");
+    private final Image grafik = new Image("file:rsc/manchen2.png");
     private String name;
     private ImageView playerView = new ImageView(); 
     private Collision collision;

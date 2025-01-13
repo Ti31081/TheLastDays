@@ -25,9 +25,13 @@ public class GUIMain extends Application {
         
         
 
+         
+         Image backgroundImage = new Image("file:rsc/background.png");
+         ImageView background = new ImageView(backgroundImage);
+         background.setFitWidth(1200);
+         background.setFitHeight(600);
+         pane.getChildren().add(background);
         
-        
-
          // Abstand zwischen den Gras-Elementen
         
         //hallo ist ein test
