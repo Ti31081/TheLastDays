@@ -18,12 +18,13 @@ public class GUIMain extends Application {
     
     private int quantity = 3;
     private static int grassblocksAnzahl = 0;
+    private static int treeIDCounter = 1;
     private static Player charakter = new Player("Tom");
     private static Pane pane = new Pane();
 
     public void start(Stage primaryStage) {
         
-        
+        System.out.println(charakter.getImageView());
 
          
          Image backgroundImage = new Image("file:rsc/background.png");
@@ -68,32 +69,19 @@ public class GUIMain extends Application {
         scene.setOnKeyPressed(event -> {
             switch (event.getCode()) {
                 case D:
-                //if (charakter.getImageView().getX() + 90 <=890) {
+                
                     charakter.startMovingRight();
+                    if (charakter.getImage() != "manchenMoveR.png") {
+                        charakter.setImage("manchenMoveR.png");
+                    }
                     
-               //}
-                //if (charakter.getImageView().getX() + 90 >= 890) {
-                   // charakter.stopMovingRight();
-                   // Grassblocks.verschiebeBlöcke();
-                   // grassPlazieren();
-               // }
-                
-                
-                /* 
-                if(charakter.getImageView().getX() + 120 >= Grassblocks.getLastX() + 70) {
-                    
-                    Grassblocks grass = new Grassblocks(grassblocksAnzahl);
-                    
-                    pane.getChildren().add(grass.getImageView());
-                    System.out.println("Neues Gras hinzugefügt");
-                    grassblocksAnzahl++;
-                }
-                    */
-
                 break;
                 
                 case A:
                 charakter.startMovingLeft();
+                if (charakter.getImage() != "manchenMoveL.png") {
+                    charakter.setImage("manchenMoveL.png");
+                }
                 break;
 
                 case SPACE:
@@ -108,9 +96,11 @@ public class GUIMain extends Application {
             switch (event.getCode()) {
                 case D:
                     charakter.stopMovingRight();
+                    charakter.setImage("manchen2R.png");
                     break;
                 case A:
                     charakter.stopMovingLeft();
+                    charakter.setImage("manchen2L.png");
                     break;
                 case SPACE:
                     charakter.stopJumping();
@@ -136,12 +126,23 @@ public class GUIMain extends Application {
             pane.getChildren().add(grass.getImageView());
             System.out.println("Neues Gras hinzugefügt");
             grassblocksAnzahl++;
+            treePlazieren();
+        }
+        
+    }
+    private static void treePlazieren(){
+        if (Math.random() < 0.2) {
+            Tree tree = new Tree(treeIDCounter, Grassblocks.getLastX() - 50, Grassblocks.getLastY() - 345);
+            pane.getChildren().add(tree.getImageView());
+            System.out.println("baum erstellt");
+            treeIDCounter++;
         }
         
     }
     public static boolean weiterBewegen(){
         if (charakter.getImageView().getX() + 90 >= 890) {
-            Grassblocks.verschiebeBlöcke();
+            //Grassblocks.verschiebeBlöcke();
+            //Tree.verschiebeTrees();
             grassPlazieren();
             return true;
         }

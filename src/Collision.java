@@ -5,9 +5,9 @@ public class Collision {
     private Player player;
     private AnimationTimer movementTimer;
     private final double GRAVITY = 0.5;
-    private final double JUMP_FORCE = -15;
+    private final double JUMP_FORCE = -10;
     private final double MOVEMENT_SPEED = 0.5;
-    private final double MAX_SPEED = 4;
+    private final double MAX_SPEED = 8;
     private final double FRICTION = 0.8;
     private boolean canJump = false;
     private int jumpCounter = 0;
@@ -46,6 +46,10 @@ public class Collision {
             if (!GUIMain.weiterBewegen()) {
                 velocityX += MOVEMENT_SPEED;
                 GUIMain.grassPlazieren();
+            }
+            else{
+                Grassblocks.verschiebeBlöcke();
+                Tree.verschiebeTrees();
             }
         }
         if (movingLeft) {
@@ -96,7 +100,8 @@ public class Collision {
             if (newX + player.getImageView().getFitWidth() <= 890 && newX >= 0) {
                 player.getImageView().setX(newX);
             } else if (newX + player.getImageView().getFitWidth() > 890) {
-                Grassblocks.verschiebeBlöcke();
+                //Grassblocks.verschiebeBlöcke();
+                //Tree.verschiebeTrees();
             }
         }
     }
