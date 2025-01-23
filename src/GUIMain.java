@@ -20,6 +20,7 @@ public class GUIMain extends Application {
     private static int grassblocksAnzahl = 0;
     private static Player charakter = new Player("Tom");
     private static Pane pane = new Pane();
+    private static Pane pane2 = new Pane();
 
     public void start(Stage primaryStage) {
         
@@ -138,6 +139,13 @@ public class GUIMain extends Application {
             grassblocksAnzahl++;
         }
         
+    }
+    public static void steineSpawnen(){             //Steine sollen sich immer wieder spawnen
+        if(charakter.getImageView().getX() == 100){
+            Stone stone = new Stone();
+            pane.getChildren().add(stone.getImageView());
+            System.out.println("Neuer Stein hinzugefügt");
+        }
     }
     public static boolean weiterBewegen(){
         if (charakter.getImageView().getX() + 90 >= 890) {

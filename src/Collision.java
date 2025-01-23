@@ -151,7 +151,6 @@ public class Collision {
         movingUp = false;
     }
 
-
     // ... rest of the existing methods (applyGravity, checkCollision, etc.) ...
 
 
