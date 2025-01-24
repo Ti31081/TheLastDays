@@ -6,7 +6,7 @@
     "configurations": [
         {
             "type": "java",
-            "name": "GUIMain",
+            "name": "launch GUIMain.java",
             "request": "launch",
             "mainClass": "GUIMain",
             "projectName": "TheLastDays_e6f19f9a",

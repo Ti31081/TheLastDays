@@ -35,17 +35,26 @@ public class Grassblocks {
     }
 
     public static void verschiebeBlöcke(){
-        for(Grassblocks block : grassblocks){
-            block.getImageView().setX(block.getImageView().getX() - 5); // Verändert die X-Koordinate um 5 Pixel
+        if (!grassblocks.isEmpty()) {
+            // Bewegt alle Grasblöcke um 5 Pixel nach links
+            for(Grassblocks block : grassblocks){
+                block.getImageView().setX(block.getImageView().getX() - 5); // Verändert die X-Koordinate um 5 Pixel
+            }
+            if(grassblocks.get(0).getImageView().getX() < -100){
+                grassblocks.remove(0);
+                // Lösche den ersten Block, wenn er aus dem Bildschirm verfällt
+            }
         }
-        if(grassblocks.get(0).getImageView().getX() < -100){
-            grassblocks.remove(0); // Lösche den ersten Block, wenn er aus dem Bildschirm verfällt
-        }
+        
     }
     
 
     public static double getLastX(){
         return grassblocks.get(grassblocks.size() - 1).getImageView().getX(); 
+    }
+
+    public static double getLastY(){
+        return grassblocks.get(grassblocks.size() - 1).getImageView().getY(); 
     }
 
     public static ArrayList<Grassblocks> getGrassblocks() {
