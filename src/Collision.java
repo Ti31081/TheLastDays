@@ -47,10 +47,7 @@ public class Collision {
                 velocityX += MOVEMENT_SPEED;
                 GUIMain.grassPlazieren();
             }
-            else{
-                Grassblocks.verschiebeBlöcke();
-                Tree.verschiebeTrees();
-            }
+            
         }
         if (movingLeft) {
             velocityX -= MOVEMENT_SPEED;
@@ -155,7 +152,6 @@ public class Collision {
     public void stopJump(){
         movingUp = false;
     }
-
 
     // ... rest of the existing methods (applyGravity, checkCollision, etc.) ...
 
