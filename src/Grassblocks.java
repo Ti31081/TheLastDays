@@ -41,6 +41,7 @@ public class Grassblocks {
                 block.getImageView().setX(block.getImageView().getX() - 5); // Verändert die X-Koordinate um 5 Pixel
             }
             if(grassblocks.get(0).getImageView().getX() < -100){
+                GUIMain.grassFromPaneRemove(grassblocks.get(0));
                 grassblocks.remove(0);
                 // Lösche den ersten Block, wenn er aus dem Bildschirm verfällt
             }

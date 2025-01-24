@@ -8,9 +8,13 @@ public class Player {
     private String bildName;
     private ImageView playerView = new ImageView(); 
     private Collision collision;
+    private String werkzeug;
+    private Inventory inventory;
 
     public Player(String name) {
         this.name = name;
+        this.werkzeug = "hand";
+        this.inventory = new Inventory();
         this.bildName = "manchen2R.png";
         this.playerView.setImage(grafik);
         this.playerView.setFitHeight(200);
@@ -55,8 +59,49 @@ public class Player {
 
     }
 
+    public void setWerkzeug(String werkzeug){
+        this.werkzeug = werkzeug;
+    }
+
+    public int etwasAbbauen(){
+        if (this.werkzeug == "axt") {
+            for (Tree tree : Tree.getTrees()){
+                double min = tree.getX() + 50;
+                double max = tree.getX() + 200;
+                if (this.playerView.getX() + 60 >= min && this.playerView.getX() <= max) {
+                    if (tree.getAbbauClicks() > 0) {
+                        tree.setAbbauClicks(tree.getAbbauClicks() - 1);
+                        if (tree.getAbbauClicks() == 0) {
+                            GUIMain.treeFromPaneRemove(tree);
+                            inventory.addWood(5);
+                            return 0;
+                        }
+                        
+                    }
+                    else if (tree.getAbbauClicks() == 0) {
+                        GUIMain.treeFromPaneRemove(tree);
+                        inventory.addWood(5);
+                        return 0;
+                    }
+                    
+                }
+            }
+            
+            
+            return 0;
+            
+        }
+        
+        
+        return 1;
+    }
+
     public String getImage(){
         return bildName;
+    }
+
+    public Inventory getInventory(){
+        return inventory;
     }
 
 }

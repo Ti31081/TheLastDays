@@ -87,6 +87,14 @@ public class GUIMain extends Application {
                 case SPACE:
                 charakter.jumping();
                 break;
+
+                case E:
+                charakter.setWerkzeug("axt");
+                charakter.etwasAbbauen();
+                break;
+
+                case Q:
+                charakter.getInventory().printWoodAmount();
             }
             
             
@@ -138,6 +146,13 @@ public class GUIMain extends Application {
             treeIDCounter++;
         }
         
+    }
+
+    public static void treeFromPaneRemove(Tree tree){
+        pane.getChildren().remove(tree.getImageView());
+    }
+    public static void grassFromPaneRemove(Grassblocks grassblock){
+        pane.getChildren().remove(grassblock.getImageView());
     }
     public static boolean weiterBewegen(){
         if (charakter.getImageView().getX() + 90 >= 890) {
