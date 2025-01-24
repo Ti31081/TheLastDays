@@ -19,6 +19,7 @@ public class GUIMain extends Application {
     private int quantity = 3;
     private static int grassblocksAnzahl = 0;
     private static int treeIDCounter = 1;
+    private static int stoneIDCounter = 1;
     private static Player charakter = new Player("Tom");
     private static Pane pane = new Pane();
     private static Pane pane2 = new Pane();
@@ -128,6 +129,8 @@ public class GUIMain extends Application {
             System.out.println("Neues Gras hinzugefügt");
             grassblocksAnzahl++;
             treePlazieren();
+            steineSpawnen();
+
         }
         
     }
@@ -140,19 +143,23 @@ public class GUIMain extends Application {
         }
         
     }
-    public static void steineSpawnen(){             //Steine sollen sich immer wieder spawnen
-        if(charakter.getImageView().getX() == 100){
-            Stone stone = new Stone();
+    public static void steineSpawnen(){    
+        if(Stone.getAnzahlSteine() < 5){       //Steine sollen sich immer wieder spawnen
+        if(Math.random() < 0.2){
+            Stone stone = new Stone(Grassblocks.getLastX() -10 , Grassblocks.getLastY() - 40);
             pane.getChildren().add(stone.getImageView());
             System.out.println("Neuer Stein hinzugefügt");
         }
     }
+    }
     public static boolean weiterBewegen(){
         if (charakter.getImageView().getX() + 90 >= 890) {
-            //Grassblocks.verschiebeBlöcke();
-            //Tree.verschiebeTrees();
+            Grassblocks.verschiebeBlöcke();
+            Tree.verschiebeTrees();
+            Stone.verschiebeSteine();
             grassPlazieren();
             return true;
+
         }
         else{
             return false;

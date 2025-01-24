@@ -47,10 +47,7 @@ public class Collision {
                 velocityX += MOVEMENT_SPEED;
                 GUIMain.grassPlazieren();
             }
-            else{
-                Grassblocks.verschiebeBlöcke();
-                Tree.verschiebeTrees();
-            }
+            
         }
         if (movingLeft) {
             velocityX -= MOVEMENT_SPEED;

@@ -3,32 +3,50 @@ import java.util.ArrayList;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 public class Stone {
-    private static ArrayList<Stone> stone = new ArrayList<Stone>();
-    private final Image stoneImage = new Image("file:rsc/stone.png");
+    private static ArrayList<Stone> stones = new ArrayList<Stone>();
+    private final Image stoneImage = new Image("file:rsc/stein.png");
     private ImageView imageView = new ImageView();
-    private int xStein = 0;
-    private int yStein = 0; 
+    private static int anzahlSteine = 0; 
+    Grassblocks grassblocks;
 
-public void Stone(){
+public Stone(double xpos, double ypos){
     this.imageView.setImage(stoneImage);
-    this.imageView.setFitWidth(50);
-    this.imageView.setFitHeight(50);
-    this.imageView.setY(yStein);
-    this.imageView.setX(xStein);
-    stone.add(this);
+    this.imageView.setFitWidth(90);
+    this.imageView.setFitHeight(90);
+    this.imageView.setPreserveRatio(true);
+    this.imageView.setY(ypos);
+    this.imageView.setX(xpos);
+    this.anzahlSteine++;
+    
+    stones.add(this);
+    
 
 }
 
-public void verschiebeSteine(){
-    for(Stone stone : stone){
-        stone.getImageView().setX(stone.getImageView().getX() +10 );
+public static void verschiebeSteine() {
+    if (!stones.isEmpty()) {
+        // Bewegt alle Steinblöcke um 5 Pixel nach links
+        for (Stone stone : stones) {
+            stone.getImageView().setX(stone.getImageView().getX() - 5);
+            // Verändert die X-Koordinate um 5 Pixel
+        }
+        if (stones.get(0).getImageView().getX() < -300) {
+            stones.remove(0);
+            // Lösche den ersten Block, wenn er aus dem Bildschirm verfällt
+        }
     }
 }
 
 public ImageView getImageView() {
     return imageView;
+}
 
+public static int getAnzahlSteine() {
+    return anzahlSteine;
+}
 
+public ArrayList<Stone> getStones(){
+    return stones;
 }
 }
 
