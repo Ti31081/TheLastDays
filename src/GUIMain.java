@@ -107,10 +107,15 @@ public class GUIMain extends Application {
         startScreenPane.setPrefSize(1200, 600);
         startScreenPane.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5);");
         Label pauseLabel = new Label("Game Paused");
+        Image backgroundImage = new Image("file:rsc/sartscreen.png");
+        ImageView background = new ImageView(backgroundImage);
+        background.setFitWidth(1200);
+        background.setFitHeight(600);
         pauseLabel.setStyle("-fx-text-fill: white; -fx-font-size: 24px;");
         pauseLabel.setLayoutX(550);
         pauseLabel.setLayoutY(300);
-        startScreenPane.getChildren().add(pauseLabel);
+
+        startScreenPane.getChildren().add(background);
         startScreenPane.setVisible(false);
         pane.getChildren().remove(startScreenPane);
         pane.getChildren().add(startScreenPane);
