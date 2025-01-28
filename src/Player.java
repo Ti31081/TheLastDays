@@ -64,7 +64,7 @@ public class Player {
     }
 
     public int etwasAbbauen(){
-        if (this.werkzeug == "axt") {
+        if ("axt".equals(this.werkzeug)) {
             for (Tree tree : Tree.getTrees()){
                 double min = tree.getX() + 50;
                 double max = tree.getX() + 200;
@@ -102,6 +102,10 @@ public class Player {
 
     public Inventory getInventory(){
         return inventory;
+    }
+
+    public Collision getCollision() {
+        return collision;
     }
 
 }

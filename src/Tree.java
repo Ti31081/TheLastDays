@@ -91,4 +91,16 @@ public class Tree {
         return trees;
     }
 
+    public void pauseAbbauTimer() {
+        if (abbauTimer != null) {
+            abbauTimer.stop();
+        }
+    }
+
+    public void resumeAbbauTimer() {
+        if (abbauTimer != null) {
+            abbauTimer.start();
+        }
+    }
+
 }

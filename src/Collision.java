@@ -212,5 +212,15 @@ public class Collision {
         return verticalOverlap && horizontalCollision;
     }
 
-    
+    public void pauseMovementTimer() {
+        if (movementTimer != null) {
+            movementTimer.stop();
+        }
+    }
+
+    public void resumeMovementTimer() {
+        if (movementTimer != null) {
+            movementTimer.start();
+        }
+    }
 }
