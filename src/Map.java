@@ -47,34 +47,27 @@ public class Map {
     private static void randomHöhe(Grassblocks gras, ArrayList<Grassblocks> grassblocks) {
         int hoch = 1;
         double random = Math.random();
-        System.out.println(random);
-        System.out.println((1/3));
         if (random < 0.33) {
             hoch = 2;
             if(grassblocks.get(grassblocks.size() - 2).getImageView().getY() >= 300){ 
             hoch = 3;
             }
         }
-        else if (random < 0.66) {
+        else if (random < 0.5) {
             hoch = 4;
-            System.out.println("test");
         }
         switch (hoch) {
             case 3:
-                System.out.println("case 3");
                 gras.getImageView().setY(grassblocks.get(grassblocks.size() - 2).getImageView().getY() - 100);
                 break;
             case 1:
-                System.out.println("case 1");
                 int randomY = (int) (Math.random() * (550 - gras.getImageView().getY()) + gras.getImageView().getY());
                 gras.getImageView().setY(randomY);
                 break;
             case 2:
-                System.out.println("case 2");
                 gras.getImageView().setY(grassblocks.get(grassblocks.size() - 2).getImageView().getY());
                 break;
             case 4:
-                System.out.println("case 4");
                 System.out.println("bewegender block");
                 hochrunterBewegendeBlöcke(gras);
                 break;
