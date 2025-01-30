@@ -43,10 +43,9 @@ public class Collision {
         // Beschleunigung basierend auf Eingabe
         if (movingRight) {
             
-            if (!GUIMain.weiterBewegen()) {
-                velocityX += MOVEMENT_SPEED;
-                GUIMain.grassPlazieren();
-            }
+            velocityX += MOVEMENT_SPEED;
+            GUIMain.grassPlazieren();
+            
             
         }
         if (movingLeft) {
@@ -96,9 +95,10 @@ public class Collision {
         if (canMove) {
             if (newX + player.getImageView().getFitWidth() <= 890 && newX >= 0) {
                 player.getImageView().setX(newX);
-            } else if (newX + player.getImageView().getFitWidth() > 890) {
-                //Grassblocks.verschiebeBlöcke();
-                //Tree.verschiebeTrees();
+            } else if (newX + player.getImageView().getFitWidth() >= 890) {
+                Grassblocks.verschiebeBlöcke();
+                Tree.verschiebeTrees();
+                Stone.verschiebeSteine();
             }
         }
     }
