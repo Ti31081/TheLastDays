@@ -46,22 +46,61 @@ public class Map {
 
     private static void randomHöhe(Grassblocks gras, ArrayList<Grassblocks> grassblocks) {
         int hoch = 1;
-        if (Math.random() < 0.5) {
+        double random = Math.random();
+        System.out.println(random);
+        System.out.println((1/3));
+        if (random < 0.33) {
             hoch = 2;
             if(grassblocks.get(grassblocks.size() - 2).getImageView().getY() >= 300){ 
             hoch = 3;
             }
         }
-        if (hoch == 3) {
-            gras.getImageView().setY(grassblocks.get(grassblocks.size() - 2).getImageView().getY() - 100);
+        else if (random < 0.66) {
+            hoch = 4;
+            System.out.println("test");
         }
-        if (hoch == 1) {
-            int randomY = (int) (Math.random() * (550 - gras.getImageView().getY()) + gras.getImageView().getY());
-            gras.getImageView().setY(randomY);
+        switch (hoch) {
+            case 3:
+                System.out.println("case 3");
+                gras.getImageView().setY(grassblocks.get(grassblocks.size() - 2).getImageView().getY() - 100);
+                break;
+            case 1:
+                System.out.println("case 1");
+                int randomY = (int) (Math.random() * (550 - gras.getImageView().getY()) + gras.getImageView().getY());
+                gras.getImageView().setY(randomY);
+                break;
+            case 2:
+                System.out.println("case 2");
+                gras.getImageView().setY(grassblocks.get(grassblocks.size() - 2).getImageView().getY());
+                break;
+            case 4:
+                System.out.println("case 4");
+                System.out.println("bewegender block");
+                hochrunterBewegendeBlöcke(gras);
+                break;
         }
-        if (hoch == 2) {
-            gras.getImageView().setY(grassblocks.get(grassblocks.size() - 2).getImageView().getY());
-        }
+    }
+
+    private static void hochrunterBewegendeBlöcke(Grassblocks gras){
+        AnimationTimer bewegungTimer = new AnimationTimer() {
+            boolean bewegung = false;
+            @Override
+            public void handle(long now) {
+                if (!bewegung) {
+                gras.getImageView().setY(gras.getImageView().getY() + 2);
+                }
+                else if (bewegung) {
+                    gras.getImageView().setY(gras.getImageView().getY() - 2);
+                }
+                if (gras.getImageView().getY() >= 570) {
+                    bewegung = true;
+                }
+                if (gras.getImageView().getY() <= 270) {
+                    bewegung = false;
+                }
+            }
+        };
+        bewegungTimer.start();
     }
 
 
