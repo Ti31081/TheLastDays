@@ -35,9 +35,7 @@ public class GUIMain extends Application {
          background.setFitHeight(600);
          pane.getChildren().add(background);
         
-         // Abstand zwischen den Gras-Elementen
-        
-        //hallo ist ein test
+         
         
         
         pane.getChildren().add(charakter.getImageView());
@@ -129,7 +127,7 @@ public class GUIMain extends Application {
     }
 
     public static void grassPlazieren(){
-        if(charakter.getImageView().getX() + 120 >= Grassblocks.getLastX() + 70) {
+        if(charakter.getImageView().getX() + 100 >= Grassblocks.getLastX() + 100) {
                     
             Grassblocks grass = new Grassblocks(grassblocksAnzahl);
             
@@ -144,7 +142,7 @@ public class GUIMain extends Application {
     }
     private static void treePlazieren(){
         if (Math.random() < 0.2) {
-            Tree tree = new Tree(treeIDCounter, Grassblocks.getLastX() - 50, Grassblocks.getLastY() - 345);
+            Tree tree = new Tree(treeIDCounter, Grassblocks.getLastX() - 60, Grassblocks.getLastY() - 345);
             pane.getChildren().add(tree.getImageView());
             System.out.println("baum erstellt");
             treeIDCounter++;
@@ -168,11 +166,30 @@ public class GUIMain extends Application {
     }
     }
     public static boolean weiterBewegen(){
-        if (charakter.getImageView().getX() + 90 >= 890) {
-            Grassblocks.verschiebeBlöcke();
-            Tree.verschiebeTrees();
-            Stone.verschiebeSteine();
-            grassPlazieren();
+        if (charakter.getImageView().getX() + 110 >= 890) {
+            // Prüfe für jeden Grassblock die seitliche Kollision
+            
+                double blockX = Grassblocks.getGrassblocks().get(Grassblocks.getGrassblocks().size() - 2).getImageView().getX();
+                double blockY = Grassblocks.getGrassblocks().get(Grassblocks.getGrassblocks().size() - 2).getImageView().getY();
+                double block2X = Grassblocks.getGrassblocks().get(Grassblocks.getGrassblocks().size() - 1).getImageView().getX();
+                double block2Y = Grassblocks.getGrassblocks().get(Grassblocks.getGrassblocks().size() - 1).getImageView().getY();
+                double charX = charakter.getImageView().getX();
+                double charY = charakter.getImageView().getY();
+
+                // Wenn der Charakter über dem Block ist (springt), keine seitliche Kollision
+                if (charY + charakter.getImageView().getFitHeight() <= block2Y) {
+                    Grassblocks.verschiebeBlöcke();
+                    Tree.verschiebeTrees();
+                    Stone.verschiebeSteine();
+                    grassPlazieren();
+                    return true;
+                }
+
+                // Prüfe seitliche Kollision nur wenn der Charakter nicht über dem Block ist
+                if (charX + 60 >= block2X && charX <= block2X + 100) {
+                    return true;
+                }
+            
             return true;
 
         }
