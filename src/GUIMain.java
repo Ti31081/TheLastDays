@@ -23,103 +23,136 @@ public class GUIMain extends Application {
     private static Player charakter = new Player("Tom");
     private static Pane pane = new Pane();
     private static Pane pane2 = new Pane();
+    private Pane startScreenPane = new Pane();
+    private boolean isGamePaused = false;
 
     public void start(Stage primaryStage) {
         
         System.out.println(charakter.getImageView());
 
-         
-         Image backgroundImage = new Image("file:rsc/background.png");
-         ImageView background = new ImageView(backgroundImage);
-         background.setFitWidth(1200);
-         background.setFitHeight(600);
-         pane.getChildren().add(background);
-        
-         
-        
+        Image backgroundImage = new Image("file:rsc/background.png");
+        ImageView background = new ImageView(backgroundImage);
+        background.setFitWidth(1200);
+        background.setFitHeight(600);
+        pane.getChildren().add(background);
         
         pane.getChildren().add(charakter.getImageView());
-        
-        
-        
-        // Funktion zur Aktualisierung der Gras-Elemente
-        
 
-            // HBox zuerst leeren und dann die neue Anzahl hinzufügen
-            
-            for (int i = 0; i < quantity; i++) {
-                Grassblocks grassblock = new Grassblocks(grassblocksAnzahl);
-                grassblocksAnzahl++;
-                
-                pane.getChildren().add(grassblock.getImageView());
-            }
-            /* 
-            if(playerView.getX() + 60 >= grassElements.get(grassElements.size() - 1).getX() + 80) {
-                quantity++;
-                grassElements.add(new ImageView(grassImage));
-                grassElements.get(grassElements.size() - 1).setX(grassElements.get(grassElements.size() - 2).getX() + 100);
-                grassElements.get(grassElements.size() - 1).setY(400);
-                pane.getChildren().add(grassElements.get(grassElements.size() - 1));
-                System.out.println("hallo");
-            }
-            */
+        for (int i = 0; i < quantity; i++) {
+            Grassblocks grassblock = new Grassblocks(grassblocksAnzahl);
+            grassblocksAnzahl++;
+            pane.getChildren().add(grassblock.getImageView());
+        }
 
-        
+        setupStartScreen();
+
         Scene scene = new Scene(pane, 1200, 600);
         scene.setOnKeyPressed(event -> {
-            switch (event.getCode()) {
-                case D:
-                
-                    charakter.startMovingRight();
-                    if (charakter.getImage() != "manchenMoveR.png") {
-                        charakter.setImage("manchenMoveR.png");
-                    }
-                    
-                break;
-                
-                case A:
-                charakter.startMovingLeft();
-                if (charakter.getImage() != "manchenMoveL.png") {
-                    charakter.setImage("manchenMoveL.png");
-                }
-                break;
-
-                case SPACE:
-                charakter.jumping();
-                break;
-
-                case E:
-                charakter.setWerkzeug("axt");
-                charakter.etwasAbbauen();
-                break;
-
-                case Q:
-                charakter.getInventory().printWoodAmount();
+            if (event.getCode() == KeyCode.ESCAPE) {
+                togglePause();
             }
-            
-            
+            if (!isGamePaused) {
+                switch (event.getCode()) {
+                    case D:
+                        charakter.startMovingRight();
+                        if (!charakter.getImage().equals("manchenMoveR.png")) {
+                            charakter.setImage("manchenMoveR.png");
+                        }
+                        break;
+                    case A:
+                        charakter.startMovingLeft();
+                        if (!charakter.getImage().equals("manchenMoveL.png")) {
+                            charakter.setImage("manchenMoveL.png");
+                        }
+                        break;
+                    case SPACE:
+                        charakter.jumping();
+                        break;
+                    case E:
+                        charakter.setWerkzeug("axt");
+                        charakter.etwasAbbauen();
+                        break;
+                    case Q:
+                        charakter.getInventory().printWoodAmount();
+                        break;
+                }
+            }
         });
 
         scene.setOnKeyReleased(event -> {
-            switch (event.getCode()) {
-                case D:
-                    charakter.stopMovingRight();
-                    charakter.setImage("manchen2R.png");
-                    break;
-                case A:
-                    charakter.stopMovingLeft();
-                    charakter.setImage("manchen2L.png");
-                    break;
-                case SPACE:
-                    charakter.stopJumping();
-                    break;
+            if (!isGamePaused) {
+                switch (event.getCode()) {
+                    case D:
+                        charakter.stopMovingRight();
+                        charakter.setImage("manchen2R.png");
+                        break;
+                    case A:
+                        charakter.stopMovingLeft();
+                        charakter.setImage("manchen2L.png");
+                        break;
+                    case SPACE:
+                        charakter.stopJumping();
+                        break;
+                }
             }
         });
-        
+
         pane.requestFocus();
         primaryStage.setScene(scene);
-        primaryStage.setTitle("Titel Test");
+        primaryStage.setTitle("The Last Days");
         primaryStage.show();
+    }
+
+    private void setupStartScreen() {
+        startScreenPane.setPrefSize(1200, 600);
+        startScreenPane.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5);");
+        Label pauseLabel = new Label("Game Paused");
+        Image backgroundImage = new Image("file:rsc/Startbildschirm.png");
+        ImageView background = new ImageView(backgroundImage);
+        background.setFitWidth(1200);
+        background.setFitHeight(600);
+        pauseLabel.setStyle("-fx-text-fill: white; -fx-font-size: 24px;");
+        pauseLabel.setLayoutX(550);
+        pauseLabel.setLayoutY(300);
+
+        startScreenPane.getChildren().add(background);
+        startScreenPane.setVisible(false);
+        pane.getChildren().remove(startScreenPane);
+        pane.getChildren().add(startScreenPane);
+    }
+
+    private void togglePause() {
+        isGamePaused = !isGamePaused;
+        pane.getChildren().remove(startScreenPane);
+        pane.getChildren().add(startScreenPane);
+        startScreenPane.setVisible(isGamePaused);
+        if (isGamePaused) {
+            pauseGame();
+        } else {
+            resumeGame();
+        }
+    }
+
+    private void pauseGame() {
+        // Stop all AnimationTimers and other game logic
+        charakter.getCollision().pauseMovementTimer();
+        
+        // Stop any other animations or timers related to Trees, Stones, and Grassblocks
+        for (Tree tree : Tree.getTrees()) {
+            tree.pauseAbbauTimer();
+        }
+        // Add logic to pause any other elements if needed
+    }
+
+    private void resumeGame() {
+        // Restart all AnimationTimers and other game logic
+        charakter.getCollision().resumeMovementTimer();
+        
+        // Resume any other animations or timers related to Trees, Stones, and Grassblocks
+        for (Tree tree : Tree.getTrees()) {
+            tree.resumeAbbauTimer();
+        }
+        // Add logic to resume any other elements if needed
     }
 
     public static void main(String[] args) {
