@@ -4,7 +4,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 public class Stone {
     private static ArrayList<Stone> stones = new ArrayList<Stone>();
-    private final Image stoneImage = new Image("file:rsc/stein.png");
+    private final Image stoneImage = new Image("file:rsc/stein2.png");
     private ImageView imageView = new ImageView();
     private static int anzahlSteine = 0; 
     Grassblocks grassblocks;
@@ -45,7 +45,7 @@ public static int getAnzahlSteine() {
     return anzahlSteine;
 }
 
-public ArrayList<Stone> getStones(){
+public static ArrayList<Stone> getStones(){
     return stones;
 }
 }
