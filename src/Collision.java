@@ -3,6 +3,7 @@ import javafx.scene.image.ImageView;
 
 public class Collision {
     private Player player;
+    private Stone stones;
     private AnimationTimer movementTimer;
     private final double GRAVITY = 0.5;
     private final double JUMP_FORCE = -10;
@@ -112,6 +113,7 @@ public class Collision {
         double playerLeft = newX;
         double blockRight = block.getImageView().getX() + block.getImageView().getFitWidth();
         double blockLeft = block.getImageView().getX();
+        
 
         // Vertikale Überlappung
         boolean verticalOverlap = playerBottom > blockTop && playerTop < blockBottom;
@@ -171,6 +173,14 @@ public class Collision {
                 break;
             }
         }
+        for (Stone stones : Stone.getStones()) {
+            if (checkVerticalCollision(stones)) {
+                newY = stones.getImageView().getY() - player.getImageView().getFitHeight();
+                velocityY = 0;
+                jumpCounter = 0;  // Player can jump if standing on a stone
+                break;
+            }
+        }
         //System.out.println((int) newY);
         player.getImageView().setY((int) newY);
     }
@@ -182,13 +192,30 @@ public class Collision {
         double playerLeft = player.getImageView().getX();
         double blockRight = block.getImageView().getX() + block.getImageView().getFitWidth();
         double blockLeft = block.getImageView().getX();
- 
+       
         // Überprüfe, ob der Spieler horizontal mit dem Block überlappt
         boolean horizontalOverlap = playerRight > blockLeft && playerLeft < blockRight;
         
         // Überprüfe, ob der Spieler vertikal mit dem Block kollidiert
         boolean verticalCollision = playerBottom >= blockTop && playerBottom <= blockTop + 20;
  
+        return horizontalOverlap && verticalCollision;
+    }
+    private boolean checkVerticalCollision(Stone stone) {
+        double playerBottom = player.getImageView().getY() + player.getImageView().getFitHeight();
+        double playerTop = player.getImageView().getY();
+        double stoneTop = stone.getImageView().getY();
+        double playerRight = player.getImageView().getX() + player.getImageView().getFitWidth();
+        double playerLeft = player.getImageView().getX();
+        double stoneRight = stone.getImageView().getX() + stone.getImageView().getFitWidth() - 30;
+        double stoneLeft = stone.getImageView().getX() + 32;
+    
+        // Berührt der Spieler den Stein horizontal
+        boolean horizontalOverlap = playerRight > stoneLeft && playerLeft < stoneRight;
+    
+        // Berührt der Spieler den Stein vertikal
+        boolean verticalCollision = playerBottom >= stoneTop && playerTop < stoneTop;
+    
         return horizontalOverlap && verticalCollision;
     }
 
@@ -201,6 +228,7 @@ public class Collision {
         double playerLeft = player.getImageView().getX();
         double blockRight = block.getImageView().getX() + block.getImageView().getFitWidth();
         double blockLeft = block.getImageView().getX();
+        
 
         // Überprüfe ob der Spieler vertikal mit dem Block überlappt
         boolean verticalOverlap = playerBottom > blockTop && playerTop < blockBottom;

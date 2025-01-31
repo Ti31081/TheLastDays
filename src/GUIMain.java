@@ -161,7 +161,7 @@ public class GUIMain extends Application {
     public static void steineSpawnen(){    
         if(Stone.getAnzahlSteine() < 5){       //Steine sollen sich immer wieder spawnen
         if(Math.random() < 0.2){
-            Stone stone = new Stone(Grassblocks.getLastX() -10 , Grassblocks.getLastY() - 40);
+            Stone stone = new Stone(Grassblocks.getLastX() + 8 , Grassblocks.getLastY() - 40);
             pane.getChildren().add(stone.getImageView());
             System.out.println("Neuer Stein hinzugefügt");
         }
