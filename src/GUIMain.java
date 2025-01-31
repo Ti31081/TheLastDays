@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -13,6 +15,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+
 
 public class GUIMain extends Application {
     
@@ -23,6 +27,8 @@ public class GUIMain extends Application {
     private static Player charakter = new Player("Tom");
     private static Pane pane = new Pane();
     private static Pane pane2 = new Pane();
+    private int elapsedTime = 0;
+    private Label timeLabel; 
 
     public void start(Stage primaryStage) {
         
@@ -34,18 +40,25 @@ public class GUIMain extends Application {
          background.setFitWidth(1200);
          background.setFitHeight(600);
          pane.getChildren().add(background);
-        
-         // Abstand zwischen den Gras-Elementen
-        
-        //hallo ist ein test
-        
-        
         pane.getChildren().add(charakter.getImageView());
         
         
+        timeLabel = new Label("Time: 0:00");
+        timeLabel.setLayoutX(10); // Position the label at the top left
+        timeLabel.setLayoutY(10);
+        pane.getChildren().add(timeLabel); // Add the label to the pane
+
+        // Timer to update elapsed time every second
+        Timeline timer = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+            elapsedTime++; // Increment elapsed time
+            int minutes = elapsedTime / 60; // Calculate minutes
+            int seconds = elapsedTime % 60; // Calculate seconds
+            timeLabel.setText(String.format("Time: %d:%02d", minutes, seconds)); // Update the label text
         
-        // Funktion zur Aktualisierung der Gras-Elemente
-        
+        }));
+        timer.setCycleCount(Timeline.INDEFINITE); // Ensure the timer runs indefinitely
+        timer.play(); // Start the timer
+ 
 
             // HBox zuerst leeren und dann die neue Anzahl hinzufügen
             
