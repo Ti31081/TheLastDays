@@ -99,7 +99,7 @@ public class GUIMain extends Application {
 
         pane.requestFocus();
         primaryStage.setScene(scene);
-        primaryStage.setTitle("Titel Test");
+        primaryStage.setTitle("The Last Days");
         primaryStage.show();
     }
 
@@ -107,7 +107,7 @@ public class GUIMain extends Application {
         startScreenPane.setPrefSize(1200, 600);
         startScreenPane.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5);");
         Label pauseLabel = new Label("Game Paused");
-        Image backgroundImage = new Image("file:rsc/sartscreen.png");
+        Image backgroundImage = new Image("file:rsc/Startbildschirm.png");
         ImageView background = new ImageView(backgroundImage);
         background.setFitWidth(1200);
         background.setFitHeight(600);
