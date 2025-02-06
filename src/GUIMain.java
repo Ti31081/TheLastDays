@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -13,6 +15,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+
 
 public class GUIMain extends Application {
     
@@ -23,6 +27,8 @@ public class GUIMain extends Application {
     private static Player charakter = new Player("Tom");
     private static Pane pane = new Pane();
     private static Pane pane2 = new Pane();
+    private int elapsedTime = 0;
+    private Label timeLabel; 
     private Pane startScreenPane = new Pane();
     private boolean isGamePaused = false;
 
@@ -37,15 +43,45 @@ public class GUIMain extends Application {
         pane.getChildren().add(background);
         
         pane.getChildren().add(charakter.getImageView());
+        
+        
+        timeLabel = new Label("Time: 0:00");
+        timeLabel.setLayoutX(10); // Position the label at the top left
+        timeLabel.setLayoutY(10);
+        pane.getChildren().add(timeLabel); // Add the label to the pane
 
-        for (int i = 0; i < quantity; i++) {
-            Grassblocks grassblock = new Grassblocks(grassblocksAnzahl);
-            grassblocksAnzahl++;
-            pane.getChildren().add(grassblock.getImageView());
-        }
+        // Timer to update elapsed time every second
+        Timeline timer = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+            elapsedTime++; // Increment elapsed time
+            int minutes = elapsedTime / 60; // Calculate minutes
+            int seconds = elapsedTime % 60; // Calculate seconds
+            timeLabel.setText(String.format("Time: %d:%02d", minutes, seconds)); // Update the label text
+        
+        }));
+        timer.setCycleCount(Timeline.INDEFINITE); // Ensure the timer runs indefinitely
+        timer.play(); // Start the timer
+ 
 
-        setupStartScreen();
+            // HBox zuerst leeren und dann die neue Anzahl hinzufügen
+            
+            for (int i = 0; i < quantity; i++) {
+                Grassblocks grassblock = new Grassblocks(grassblocksAnzahl);
+                grassblocksAnzahl++;
+                
+                pane.getChildren().add(grassblock.getImageView());
+            }
+            /* 
+            if(playerView.getX() + 60 >= grassElements.get(grassElements.size() - 1).getX() + 80) {
+                quantity++;
+                grassElements.add(new ImageView(grassImage));
+                grassElements.get(grassElements.size() - 1).setX(grassElements.get(grassElements.size() - 2).getX() + 100);
+                grassElements.get(grassElements.size() - 1).setY(400);
+                pane.getChildren().add(grassElements.get(grassElements.size() - 1));
+                System.out.println("hallo");
+            }
+            */
 
+        
         Scene scene = new Scene(pane, 1200, 600);
         scene.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ESCAPE) {
