@@ -70,6 +70,8 @@ public class GUIMain extends Application {
                 
                 pane.getChildren().add(grassblock.getImageView());
             }
+
+            setupStartScreen();
             /* 
             if(playerView.getX() + 60 >= grassElements.get(grassElements.size() - 1).getX() + 80) {
                 quantity++;
