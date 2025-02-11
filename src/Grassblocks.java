@@ -6,7 +6,8 @@ import javafx.scene.image.ImageView;
 public class Grassblocks {
     private static ArrayList<Grassblocks> grassblocks = new ArrayList<Grassblocks>();
     //private final Image grassImage = new Image("file:rsc/grass.png");
-    private final Image grassImage = new Image("file:rsc/grass2.png");
+    //private final Image grassImage = new Image("file:rsc/grass2.png");
+    private final Image grassImage = new Image("file:rsc/Grasblock.png");
     private ImageView imageView = new ImageView();
     private int id;
 

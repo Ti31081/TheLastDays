@@ -36,13 +36,15 @@ public class GUIMain extends Application {
         
         System.out.println(charakter.getImageView());
 
-        Image backgroundImage = new Image("file:rsc/background.png");
+        Image backgroundImage = new Image("file:rsc/Background-2.0.3.png");
         ImageView background = new ImageView(backgroundImage);
         background.setFitWidth(1200);
         background.setFitHeight(600);
         pane.getChildren().add(background);
         
         pane.getChildren().add(charakter.getImageView());
+
+        Sounds sound = new Sounds();
         
         
         timeLabel = new Label("Time: 0:00");
@@ -92,6 +94,7 @@ public class GUIMain extends Application {
             if (!isGamePaused) {
                 switch (event.getCode()) {
                     case D:
+                        sound.playWalkSound();
                         charakter.startMovingRight();
                         if (!charakter.getImage().equals("manchenMoveR.png")) {
                             charakter.setImage("manchenMoveR.png");
@@ -104,6 +107,7 @@ public class GUIMain extends Application {
                         }
                         break;
                     case SPACE:
+                        sound.playJumpSound();
                         charakter.jumping();
                         break;
                     case E:
@@ -121,6 +125,7 @@ public class GUIMain extends Application {
             if (!isGamePaused) {
                 switch (event.getCode()) {
                     case D:
+                        sound.stopAllSounds();
                         charakter.stopMovingRight();
                         charakter.setImage("manchen2R.png");
                         break;
