@@ -10,6 +10,7 @@ public class Player {
     private Collision collision;
     private String werkzeug;
     private Inventory inventory;
+    Stone stone;
 
     public Player(String name) {
         this.name = name;
@@ -34,7 +35,6 @@ public class Player {
     public void stopJumping(){
         collision.stopJump();
     }
-
 
     public void startMovingRight() {
         collision.startMovingRight();
@@ -64,7 +64,7 @@ public class Player {
     }
 
     public int etwasAbbauen(){
-        if ("axt".equals(this.werkzeug)) {
+        if (this.werkzeug == "axt") {
             for (Tree tree : Tree.getTrees()){
                 double min = tree.getX() + 50;
                 double max = tree.getX() + 200;
@@ -95,6 +95,38 @@ public class Player {
         
         return 1;
     }
+    public int SteinAbbauen(){
+        if (this.werkzeug == "Spitzhacke") {
+            for (Stone stone : Stone.getStones()){
+                double min = stone.getX() + 50;
+                double max = stone.getX() + 200;
+                if (this.playerView.getX() + 60 >= min && this.playerView.getX() <= max) {
+                    if (stone.getAbbauClicks() > 0) {
+                        stone.setAbbauClicks(stone.getAbbauClicks() - 1);
+                        if (stone.getAbbauClicks() == 0) {
+                            GUIMain.stoneFromPaneRemove(stone);
+                            inventory.addStone(2);
+                            return 0;
+                        }
+                        
+                    }
+                    else if (stone.getAbbauClicks() == 0) {
+                        GUIMain.stoneFromPaneRemove(stone);
+                        inventory.addStone(2);
+                        return 0;
+                    }
+                    
+                }
+            }
+            
+            
+            return 0;
+            
+        }
+        
+        
+        return 1;
+    }
 
     public String getImage(){
         return bildName;
@@ -104,8 +136,5 @@ public class Player {
         return inventory;
     }
 
-    public Collision getCollision() {
-        return collision;
-    }
-
+    
 }
