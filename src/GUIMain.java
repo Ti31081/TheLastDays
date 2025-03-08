@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -13,6 +15,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+
 
 public class GUIMain extends Application {
     
@@ -23,6 +27,9 @@ public class GUIMain extends Application {
     private static Player charakter = new Player("Tom");
     private static Pane pane = new Pane();
     private static Pane pane2 = new Pane();
+    private int elapsedTime = 0;
+    private Label timeLabel; 
+    private TimerManager timerManager;  // Deklaration der TimerManager-Instanz
 
     public void start(Stage primaryStage) {
         
@@ -34,19 +41,14 @@ public class GUIMain extends Application {
          background.setFitWidth(1200);
          background.setFitHeight(600);
          pane.getChildren().add(background);
-        
-         // Abstand zwischen den Gras-Elementen
-        
-        //hallo ist ein test
-        
-        
         pane.getChildren().add(charakter.getImageView());
         
         
+        Label timerLabel = new Label("Zeit: 300s");
+        timerManager = new TimerManager(primaryStage, timerLabel, this, pane);
+        timerManager.startTimer(); // Start the timer
+ 
         
-        // Funktion zur Aktualisierung der Gras-Elemente
-        
-
             // HBox zuerst leeren und dann die neue Anzahl hinzufügen
             
             for (int i = 0; i < quantity; i++) {
@@ -89,17 +91,6 @@ public class GUIMain extends Application {
                 case SPACE:
                 charakter.jumping();
                 break;
-
-                case E:
-                charakter.setWerkzeug("axt");
-                charakter.etwasAbbauen();
-                charakter.setWerkzeug("Spitzhacke");
-                charakter.SteinAbbauen();
-                break;
-
-                case Q:
-                charakter.getInventory().printWoodAmount();
-                charakter.getInventory().printStoneAmount();
             }
             
             
@@ -154,20 +145,10 @@ public class GUIMain extends Application {
         }
         
     }
-
-    public static void treeFromPaneRemove(Tree tree){
-        pane.getChildren().remove(tree.getImageView());
-    }
-    public static void stoneFromPaneRemove(Stone stone){
-        pane.getChildren().remove(stone.getImageView());
-    }
-    public static void grassFromPaneRemove(Grassblocks grassblock){
-        pane.getChildren().remove(grassblock.getImageView());
-    }
     public static void steineSpawnen(){    
         if(Stone.getAnzahlSteine() < 5){       //Steine sollen sich immer wieder spawnen
         if(Math.random() < 0.2){
-            Stone stone = new Stone(Grassblocks.getLastX() -10 , Grassblocks.getLastY() - 40);
+            Stone stone = new Stone(Grassblocks.getLastX() + 8 , Grassblocks.getLastY() - 40);
             pane.getChildren().add(stone.getImageView());
             System.out.println("Neuer Stein hinzugefügt");
         }
@@ -186,5 +167,6 @@ public class GUIMain extends Application {
             return false;
         }
     }
+
 
 }
