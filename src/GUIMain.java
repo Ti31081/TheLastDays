@@ -32,18 +32,24 @@ public class GUIMain extends Application {
     private Timeline timer;
     private Pane startScreenPane = new Pane();
     private boolean isGamePaused = false;
+    private TimerManager timerManager;  // Deklaration der TimerManager-Instanz
 
     public void start(Stage primaryStage) {
         
         System.out.println(charakter.getImageView());
 
-        Image backgroundImage = new Image("file:rsc/Background-2.0.3.png");
-        ImageView background = new ImageView(backgroundImage);
-        background.setFitWidth(1200);
-        background.setFitHeight(600);
-        pane.getChildren().add(background);
-        
+         
+         Image backgroundImage = new Image("file:rsc/background.png");
+         ImageView background = new ImageView(backgroundImage);
+         background.setFitWidth(1200);
+         background.setFitHeight(600);
+         pane.getChildren().add(background);
         pane.getChildren().add(charakter.getImageView());
+        
+        
+        Label timerLabel = new Label("Zeit: 300s");
+        timerManager = new TimerManager(primaryStage, timerLabel, this, pane);
+        timerManager.startTimer(); // Start the timer
 
         
         Sounds sound = new Sounds();
@@ -67,7 +73,7 @@ public class GUIMain extends Application {
         timer.setCycleCount(Timeline.INDEFINITE); // Ensure the timer runs indefinitely
         timer.play(); // Start the timer
  
-
+        
             // HBox zuerst leeren und dann die neue Anzahl hinzufügen
             
             for (int i = 0; i < quantity; i++) {
@@ -95,61 +101,50 @@ public class GUIMain extends Application {
         
         Scene scene = new Scene(pane, 1200, 600);
         scene.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.ESCAPE) {
-                togglePause();
-            }
-            if (!isGamePaused) {
-                switch (event.getCode()) {
-                    case D:
-                        sound.playWalkSound();
-                        charakter.startMovingRight();
-                        if (!charakter.getImage().equals("manchenMoveR.png")) {
-                            charakter.setImage("manchenMoveR.png");
-                        }
-                        break;
-                    case A:
-                        charakter.startMovingLeft();
-                        if (!charakter.getImage().equals("manchenMoveL.png")) {
-                            charakter.setImage("manchenMoveL.png");
-                        }
-                        break;
-                    case SPACE:
-                        sound.playJumpSound();
-                        charakter.jumping();
-                        break;
-                    case E:
-                        charakter.setWerkzeug("axt");
-                        charakter.etwasAbbauen();
-                        break;
-                    case Q:
-                        charakter.getInventory().printWoodAmount();
-                        break;
+            switch (event.getCode()) {
+                case D:
+                
+                    charakter.startMovingRight();
+                    if (charakter.getImage() != "manchenMoveR.png") {
+                        charakter.setImage("manchenMoveR.png");
+                    }
+                    
+                break;
+                
+                case A:
+                charakter.startMovingLeft();
+                if (charakter.getImage() != "manchenMoveL.png") {
+                    charakter.setImage("manchenMoveL.png");
                 }
+                break;
+
+                case SPACE:
+                charakter.jumping();
+                break;
             }
+            
+            
         });
 
         scene.setOnKeyReleased(event -> {
-            if (!isGamePaused) {
-                switch (event.getCode()) {
-                    case D:
-                        sound.stopAllSounds();
-                        charakter.stopMovingRight();
-                        charakter.setImage("manchen2R.png");
-                        break;
-                    case A:
-                        charakter.stopMovingLeft();
-                        charakter.setImage("manchen2L.png");
-                        break;
-                    case SPACE:
-                        charakter.stopJumping();
-                        break;
-                }
+            switch (event.getCode()) {
+                case D:
+                    charakter.stopMovingRight();
+                    charakter.setImage("manchen2R.png");
+                    break;
+                case A:
+                    charakter.stopMovingLeft();
+                    charakter.setImage("manchen2L.png");
+                    break;
+                case SPACE:
+                    charakter.stopJumping();
+                    break;
             }
         });
-
+        
         pane.requestFocus();
         primaryStage.setScene(scene);
-        primaryStage.setTitle("The Last Days");
+        primaryStage.setTitle("Titel Test");
         primaryStage.show();
     }
 
@@ -212,7 +207,7 @@ public class GUIMain extends Application {
     }
 
     public static void grassPlazieren(){
-        if(charakter.getImageView().getX() + 100 >= Grassblocks.getLastX() + 100) {
+        if(charakter.getImageView().getX() + 120 >= Grassblocks.getLastX() + 70) {
                     
             Grassblocks grass = new Grassblocks(grassblocksAnzahl);
             
@@ -230,19 +225,12 @@ public class GUIMain extends Application {
     }
     private static void treePlazieren(){
         if (Math.random() < 0.2) {
-            Tree tree = new Tree(treeIDCounter, Grassblocks.getLastX() - 60, Grassblocks.getLastY() - 345);
+            Tree tree = new Tree(treeIDCounter, Grassblocks.getLastX() - 50, Grassblocks.getLastY() - 345);
             pane.getChildren().add(tree.getImageView());
             System.out.println("baum erstellt");
             treeIDCounter++;
         }
         
-    }
-
-    public static void treeFromPaneRemove(Tree tree){
-        pane.getChildren().remove(tree.getImageView());
-    }
-    public static void grassFromPaneRemove(Grassblocks grassblock){
-        pane.getChildren().remove(grassblock.getImageView());
     }
     public static void steineSpawnen(){    
         if(Stone.getAnzahlSteine() < 5){       //Steine sollen sich immer wieder spawnen
@@ -254,30 +242,11 @@ public class GUIMain extends Application {
     }
     }
     public static boolean weiterBewegen(){
-        if (charakter.getImageView().getX() + 110 >= 890) {
-            // Prüfe für jeden Grassblock die seitliche Kollision
-            
-                double blockX = Grassblocks.getGrassblocks().get(Grassblocks.getGrassblocks().size() - 2).getImageView().getX();
-                double blockY = Grassblocks.getGrassblocks().get(Grassblocks.getGrassblocks().size() - 2).getImageView().getY();
-                double block2X = Grassblocks.getGrassblocks().get(Grassblocks.getGrassblocks().size() - 1).getImageView().getX();
-                double block2Y = Grassblocks.getGrassblocks().get(Grassblocks.getGrassblocks().size() - 1).getImageView().getY();
-                double charX = charakter.getImageView().getX();
-                double charY = charakter.getImageView().getY();
-
-                // Wenn der Charakter über dem Block ist (springt), keine seitliche Kollision
-                if (charY + charakter.getImageView().getFitHeight() <= block2Y) {
-                    Grassblocks.verschiebeBlöcke();
-                    Tree.verschiebeTrees();
-                    Stone.verschiebeSteine();
-                    grassPlazieren();
-                    return true;
-                }
-
-                // Prüfe seitliche Kollision nur wenn der Charakter nicht über dem Block ist
-                if (charX + 60 >= block2X && charX <= block2X + 100) {
-                    return true;
-                }
-            
+        if (charakter.getImageView().getX() + 90 >= 890) {
+            Grassblocks.verschiebeBlöcke();
+            Tree.verschiebeTrees();
+            Stone.verschiebeSteine();
+            grassPlazieren();
             return true;
 
         }

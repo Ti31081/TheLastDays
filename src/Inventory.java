@@ -97,4 +97,12 @@ public class Inventory {
     public void printWoodAmount() {
         System.out.println("Du hast " + this.wood + " Holz.");
     }
+
+    public void addStone(int amount){
+        this.wood += amount;
+    }
+
+    public void printStoneAmount() {
+        System.out.println("Du hast " + this.wood + " Stein.");
+    }
 }
