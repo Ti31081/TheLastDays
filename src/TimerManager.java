@@ -36,7 +36,7 @@ public class TimerManager {
     private void updateTimer() {
         secondsElapsed++;
         updateLabel();
-        if (secondsElapsed >= 11) { // Nach 5 Minuten
+        if (secondsElapsed >= 300) { // Nach 5 Minuten
             timer.stop();
             showEndScreen();
         }

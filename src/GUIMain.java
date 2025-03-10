@@ -102,6 +102,10 @@ public class GUIMain extends Application {
         Scene scene = new Scene(pane, 1200, 600);
         scene.setOnKeyPressed(event -> {
             switch (event.getCode()) {
+                case ESCAPE:
+                    togglePause();
+                break;
+                
                 case D:
                 
                     charakter.startMovingRight();
@@ -261,6 +265,10 @@ public class GUIMain extends Application {
     public static void grassFromPaneRemove(Grassblocks grassblock){
         pane.getChildren().remove(grassblock.getImageView());
     }
+    public static void stoneFromPaneRemove(Stone stone){
+        pane.getChildren().remove(stone.getImageView());
+    }
+
 
     public static Pane getPane(){
         return pane;
