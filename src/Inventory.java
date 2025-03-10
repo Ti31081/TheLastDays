@@ -90,6 +90,9 @@ public class Inventory {
     public void addWood(int amount){
         this.wood += amount;
     }
+    public int getWood(){
+        return wood;
+    }
 
     public void printWoodAmount() {
         System.out.println("Du hast " + this.wood + " Holz.");

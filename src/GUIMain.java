@@ -29,6 +29,7 @@ public class GUIMain extends Application {
     private static Pane pane2 = new Pane();
     private int elapsedTime = 0;
     private Label timeLabel; 
+    private Timeline timer;
     private Pane startScreenPane = new Pane();
     private boolean isGamePaused = false;
 
@@ -44,7 +45,10 @@ public class GUIMain extends Application {
         
         pane.getChildren().add(charakter.getImageView());
 
+        
         Sounds sound = new Sounds();
+        Quests quests = new Quests(charakter);
+        
         
         
         timeLabel = new Label("Time: 0:00");
@@ -53,7 +57,7 @@ public class GUIMain extends Application {
         pane.getChildren().add(timeLabel); // Add the label to the pane
 
         // Timer to update elapsed time every second
-        Timeline timer = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+        timer = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
             elapsedTime++; // Increment elapsed time
             int minutes = elapsedTime / 60; // Calculate minutes
             int seconds = elapsedTime % 60; // Calculate seconds
@@ -73,7 +77,7 @@ public class GUIMain extends Application {
                 pane.getChildren().add(grassblock.getImageView());
             }
 
-            setupStartScreen();
+            
             /* 
             if(playerView.getX() + 60 >= grassElements.get(grassElements.size() - 1).getX() + 80) {
                 quantity++;
@@ -84,6 +88,9 @@ public class GUIMain extends Application {
                 System.out.println("hallo");
             }
             */
+
+            setupStartScreen();
+            togglePause();
 
         
         Scene scene = new Scene(pane, 1200, 600);
@@ -179,6 +186,7 @@ public class GUIMain extends Application {
     private void pauseGame() {
         // Stop all AnimationTimers and other game logic
         charakter.getCollision().pauseMovementTimer();
+        timer.pause();
         
         // Stop any other animations or timers related to Trees, Stones, and Grassblocks
         for (Tree tree : Tree.getTrees()) {
@@ -190,6 +198,7 @@ public class GUIMain extends Application {
     private void resumeGame() {
         // Restart all AnimationTimers and other game logic
         charakter.getCollision().resumeMovementTimer();
+        timer.play();
         
         // Resume any other animations or timers related to Trees, Stones, and Grassblocks
         for (Tree tree : Tree.getTrees()) {
@@ -210,8 +219,11 @@ public class GUIMain extends Application {
             pane.getChildren().add(grass.getImageView());
             System.out.println("Neues Gras hinzugefügt");
             grassblocksAnzahl++;
-            treePlazieren();
-            steineSpawnen();
+            if (grass.getBewegung() == false) {
+                treePlazieren();
+                steineSpawnen();
+            }
+            
 
         }
         
@@ -272,6 +284,10 @@ public class GUIMain extends Application {
         else{
             return false;
         }
+    }
+
+    public static Pane getPane(){
+        return pane;
     }
 
 

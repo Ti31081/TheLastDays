@@ -10,9 +10,11 @@ public class Grassblocks {
     private final Image grassImage = new Image("file:rsc/Grasblock.png");
     private ImageView imageView = new ImageView();
     private int id;
+    private boolean bewegung;
 
     public Grassblocks(int id) {
         this.id = id;
+        this.bewegung = false;
         this.imageView.setImage(grassImage);
         this.imageView.setFitWidth(100);
         this.imageView.setFitHeight(100);
@@ -48,6 +50,14 @@ public class Grassblocks {
             }
         }
         
+    }
+
+    public boolean getBewegung(){
+        return this.bewegung;
+    }
+
+    public void setBewegung(boolean neu){
+        this.bewegung = neu;
     }
     
 

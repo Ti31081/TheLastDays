@@ -70,6 +70,8 @@ public class Map {
             case 4:
                 System.out.println("bewegender block");
                 hochrunterBewegendeBlöcke(gras);
+                //Variable für bewegende Blöcke
+                gras.setBewegung(true);
                 break;
         }
     }
