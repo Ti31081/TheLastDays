@@ -255,6 +255,13 @@ public class GUIMain extends Application {
         }
     }
 
+    public static void treeFromPaneRemove(Tree tree){
+        pane.getChildren().remove(tree.getImageView());
+    }
+    public static void grassFromPaneRemove(Grassblocks grassblock){
+        pane.getChildren().remove(grassblock.getImageView());
+    }
+
     public static Pane getPane(){
         return pane;
     }
