@@ -78,11 +78,13 @@ public class Player {
                         }
                         
                     }
+                    /* 
                     else if (tree.getAbbauClicks() == 0) {
                         GUIMain.treeFromPaneRemove(tree);
                         inventory.addWood(5);
                         return 0;
                     }
+                    */
                     
                 }
             }
