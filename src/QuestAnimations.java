@@ -32,7 +32,7 @@ public class QuestAnimations {
         AnimationTimer bewegungTimer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                int wood = 0;
+                int wood = player.getInventory().getStein();
                 quest.setInhalt("Sammle 50 Stein \n\n            " + wood + "/50");
                 if (wood >= 50) {
                     dritteQuest();
@@ -44,6 +44,21 @@ public class QuestAnimations {
     }
 
     public void dritteQuest(){
-        
+        AnimationTimer bewegungTimer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                boolean fertig = player.getSteinPicke();
+                quest.setInhalt("Crafte Dir aus 70 Holz und 48 Stein \n eine Stein Spitzhacke ");
+                if (fertig){
+                    vierteQuest();
+                    this.stop(); // Use this.stop() instead of bewegungTimer.stop() since we're inside the AnimationTimer
+                }
+            }
+        };
+        bewegungTimer.start();
+    }
+
+    public void vierteQuest(){
+        System.out.println("Geschafft");
     }
 }

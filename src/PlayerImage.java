@@ -15,8 +15,11 @@ public class PlayerImage {
             case "axt":
                 player.setImage("AxtRL.png");
             break;
-            case "Picke":
-
+            case "PickeH":
+            player.setImage("HolzHackeRL.png");
+            break;
+            case "PickeS":
+            player.setImage("SteinHackeRL.png");
             break;
         
         }
@@ -32,8 +35,11 @@ public class PlayerImage {
             case "axt":
                 player.setImage("AxtLL.png");
             break;
-            case "Picke":
-
+            case "PickeH":
+            player.setImage("HolzHackeLL.png");
+            break;
+            case "PickeS":
+            player.setImage("SteinHackeLL.png");
             break;
         
         }
@@ -49,8 +55,11 @@ public class PlayerImage {
             case "axt":
                 player.setImage("AxtRS.png");
             break;
-            case "Picke":
-
+            case "PickeH":
+                player.setImage("HolzHackeRS.png");
+            break;
+            case "PickeS":
+                player.setImage("SteinHackeRS.png");
             break;
         
         }
@@ -66,8 +75,11 @@ public class PlayerImage {
             case "axt":
                 player.setImage("AxtLS.png");
             break;
-            case "Picke":
-
+            case "PickeH":
+                player.setImage("HolzHackeLS.png");
+            break;
+            case "PickeS":
+                player.setImage("SteinHackeLS.png");
             break;
         
         }

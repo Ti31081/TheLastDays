@@ -44,6 +44,7 @@ public class GUIMain extends Application {
         pane.getChildren().add(background);
         
         pane.getChildren().add(charakter.getImageView());
+        pane.getChildren().add(charakter.getInventory().gettextFieldINV());
 
         
         Sounds sound = new Sounds();
@@ -124,18 +125,38 @@ public class GUIMain extends Application {
                     case Q:
                         charakter.getInventory().printWoodAmount();
                         break;
+                    case C:
+                        if (charakter.getInventory().getWood() >= 70 && charakter.getInventory().getStein() >= 48) {
+                            charakter.setSteinPicke(true);
+                            charakter.getInventory().setWood(charakter.getInventory().getWood() - 70);
+                            charakter.getInventory().setStein(charakter.getInventory().getStein() - 48);
+
+                        }
+                        break;
                     case DIGIT1:
                         charakter.setWerkzeug("hand");
                         charakter.ImageAktualisieren();
+                        charakter.aendereWidth(60);
+                        pane.getChildren().remove(charakter.getImageView());
+                        pane.getChildren().add(charakter.getImageView());
                         break;
                     case DIGIT2:
                         charakter.setWerkzeug("axt");
                         charakter.ImageAktualisieren();
                         charakter.aendereWidth(80);
+                        pane.getChildren().remove(charakter.getImageView());
+                        pane.getChildren().add(charakter.getImageView());
                         break;
                     case DIGIT3:
-                        charakter.setWerkzeug("Picke");
+                        if (charakter.getSteinPicke()) {
+                            charakter.setWerkzeug("PickeS");
+                        }else{
+                        charakter.setWerkzeug("PickeH");
+                        }
                         charakter.ImageAktualisieren();
+                        charakter.aendereWidth(80);
+                        pane.getChildren().remove(charakter.getImageView());
+                        pane.getChildren().add(charakter.getImageView());
                         break;
                 }
             }

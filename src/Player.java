@@ -11,10 +11,12 @@ public class Player {
     private String werkzeug;
     private Inventory inventory;
     private PlayerImage playerImage;
+    private boolean steinPicke;
 
     public Player(String name) {
         this.name = name;
         this.werkzeug = "hand";
+        this.steinPicke = false;
         this.inventory = new Inventory();
         this.playerImage = new PlayerImage(this);
         this.bildName = "manchen2R.png";
@@ -35,6 +37,14 @@ public class Player {
     
     public void stopJumping(){
         collision.stopJump();
+    }
+
+    public boolean getSteinPicke(){
+        return steinPicke;
+    }
+
+    public void setSteinPicke(boolean neu){
+        steinPicke = neu;
     }
 
     public void aendereWidth(int px){
@@ -79,7 +89,7 @@ public class Player {
     }
 
     public void ImageAktualisieren(){
-        if (bildName == "manchen2L.png" || bildName == "manchenMoveL.png" || bildName == "AxtLL.png" || bildName == "AxtLS.png") {
+        if (bildName == "manchen2L.png" || bildName == "manchenMoveL.png" || bildName == "AxtLL.png" || bildName == "AxtLS.png" || bildName == "SteinHackeLL.png" || bildName == "SteinHackeLS.png" || bildName == "HolzHackeLL.png" || bildName == "HolzHackeLS.png") {
             playerImage.StandLeft();
         }
         else{
