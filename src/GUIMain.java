@@ -29,7 +29,7 @@ public class GUIMain extends Application {
     private static Pane pane2 = new Pane();
     private int elapsedTime = 0;
     private Label timeLabel; 
-    private Timeline timer;
+    private TimerManager timerManager;
     private Pane startScreenPane = new Pane();
     private boolean isGamePaused = false;
 
@@ -49,23 +49,10 @@ public class GUIMain extends Application {
         Sounds sound = new Sounds();
         Quests quests = new Quests(charakter);
         
-        
-        
-        timeLabel = new Label("Time: 0:00");
-        timeLabel.setLayoutX(10); // Position the label at the top left
-        timeLabel.setLayoutY(10);
-        pane.getChildren().add(timeLabel); // Add the label to the pane
+        timeLabel = new Label();
+        timerManager = new TimerManager(primaryStage, timeLabel, this, pane);
+        timerManager.startTimer();
 
-        // Timer to update elapsed time every second
-        timer = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
-            elapsedTime++; // Increment elapsed time
-            int minutes = elapsedTime / 60; // Calculate minutes
-            int seconds = elapsedTime % 60; // Calculate seconds
-            timeLabel.setText(String.format("Time: %d:%02d", minutes, seconds)); // Update the label text
-        
-        }));
-        timer.setCycleCount(Timeline.INDEFINITE); // Ensure the timer runs indefinitely
-        timer.play(); // Start the timer
  
 
             // HBox zuerst leeren und dann die neue Anzahl hinzufügen
@@ -184,28 +171,69 @@ public class GUIMain extends Application {
     }
 
     private void pauseGame() {
-        // Stop all AnimationTimers and other game logic
         charakter.getCollision().pauseMovementTimer();
-        timer.pause();
-        
-        // Stop any other animations or timers related to Trees, Stones, and Grassblocks
+        if (timerManager != null) timerManager.pauseTimer();
         for (Tree tree : Tree.getTrees()) {
             tree.pauseAbbauTimer();
         }
-        // Add logic to pause any other elements if needed
     }
-
+    
     private void resumeGame() {
-        // Restart all AnimationTimers and other game logic
         charakter.getCollision().resumeMovementTimer();
-        timer.play();
-        
-        // Resume any other animations or timers related to Trees, Stones, and Grassblocks
+        if (timerManager != null) timerManager.resumeTimer();
         for (Tree tree : Tree.getTrees()) {
             tree.resumeAbbauTimer();
         }
-        // Add logic to resume any other elements if needed
     }
+
+    public void restartGame() {
+        System.out.println("Spiel wird neu gestartet...");
+    
+        // Reset Spielfeld & Daten
+        pane.getChildren().clear();
+        grassblocksAnzahl = 0;
+        treeIDCounter = 1;
+        stoneIDCounter = 1;
+        charakter = new Player("Tom");
+    
+        // Listen wirklich leeren
+        Grassblocks.getGrassblocks().clear();
+        Tree.getTrees().clear();
+        Stone.getSteine().clear(); // sicherstellen, dass es diese Methode gibt
+    
+        // Hintergrund
+        Image backgroundImage = new Image("file:rsc/Background-2.0.3.png");
+        ImageView background = new ImageView(backgroundImage);
+        background.setFitWidth(1200);
+        background.setFitHeight(600);
+        pane.getChildren().add(background);
+    
+        // Grasblöcke neu setzen
+        for (int i = 0; i < quantity; i++) {
+            Grassblocks grassblock = new Grassblocks(grassblocksAnzahl);
+            grassblocksAnzahl++;
+            pane.getChildren().add(grassblock.getImageView());
+        }
+    
+        // Charakter auf ersten Block setzen
+        ImageView playerView = charakter.getImageView();
+        Grassblocks ersterBlock = Grassblocks.getGrassblocks().get(0);
+        playerView.setX(ersterBlock.getImageView().getX());
+        playerView.setY(ersterBlock.getImageView().getY() - playerView.getFitHeight());
+        pane.getChildren().add(playerView);
+    
+        // Timer & UI zurücksetzen
+        timerManager.restartTimer();
+        pane.getChildren().add(timeLabel);
+        timeLabel.setLayoutX(10);
+        timeLabel.setLayoutY(10);
+    
+        setupStartScreen();
+        isGamePaused = false;
+        pane.requestFocus();
+    }
+    
+    
 
     public static void main(String[] args) {
         launch(args);

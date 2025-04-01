@@ -48,5 +48,10 @@ public static int getAnzahlSteine() {
 public static ArrayList<Stone> getStones(){
     return stones;
 }
+
+public static ArrayList<Stone> getSteine() {
+    return stones;
+}
+
 }
 
