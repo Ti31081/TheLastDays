@@ -90,11 +90,21 @@ public class Inventory {
     public void addWood(int amount){
         this.wood += amount;
     }
-    public int getWood(){
-        return wood;
-    }
 
     public void printWoodAmount() {
         System.out.println("Du hast " + this.wood + " Holz.");
     }
+
+    public void addStone(int amount){
+        this.wood += amount;
+    }
+
+    public void printStoneAmount() {
+        System.out.println("Du hast " + this.wood + " Stein.");
+    }
+
+    public int getWood() {
+        return wood; // oder holz – je nachdem, wie dein Attribut heißt!
+    }
+    
 }

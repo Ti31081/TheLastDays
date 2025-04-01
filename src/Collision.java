@@ -202,6 +202,9 @@ public class Collision {
         return horizontalOverlap && verticalCollision;
     }
     private boolean checkVerticalCollision(Stone stone) {
+        if (stone == null || stone.getImageView() == null || stone.getAbbauClicks() <= 0) return false; // bereits abgebaut
+        if (stone.isRemoved()) return false;
+    
         double playerBottom = player.getImageView().getY() + player.getImageView().getFitHeight();
         double playerTop = player.getImageView().getY();
         double stoneTop = stone.getImageView().getY();
@@ -210,14 +213,12 @@ public class Collision {
         double stoneRight = stone.getImageView().getX() + stone.getImageView().getFitWidth() - 30;
         double stoneLeft = stone.getImageView().getX() + 32;
     
-        // Berührt der Spieler den Stein horizontal
         boolean horizontalOverlap = playerRight > stoneLeft && playerLeft < stoneRight;
-    
-        // Berührt der Spieler den Stein vertikal
         boolean verticalCollision = playerBottom >= stoneTop && playerTop < stoneTop;
     
         return horizontalOverlap && verticalCollision;
     }
+    
 
     private boolean checkHorizontalCollision(Grassblocks block) {
         double playerBottom = player.getImageView().getY() + player.getImageView().getFitHeight();

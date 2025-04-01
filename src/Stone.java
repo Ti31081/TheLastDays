@@ -1,5 +1,5 @@
 import java.util.ArrayList;
-
+import javafx.animation.AnimationTimer;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 public class Stone {
@@ -8,6 +8,12 @@ public class Stone {
     private ImageView imageView = new ImageView();
     private static int anzahlSteine = 0; 
     Grassblocks grassblocks;
+    private AnimationTimer abbauTimer;
+    private int abbauClicks = 5;
+    private boolean removed = false;
+
+
+    
 
 public Stone(double xpos, double ypos){
     this.imageView.setImage(stoneImage);
@@ -17,11 +23,16 @@ public Stone(double xpos, double ypos){
     this.imageView.setY(ypos);
     this.imageView.setX(xpos);
     this.anzahlSteine++;
-    
+    startAbbauTimer();
     stones.add(this);
     
 
 }
+public void entfernen() {
+    this.removed = true;
+    GUIMain.stoneFromPaneRemove(this); // entfernt das Bild aus dem Pane
+}
+
 
 public static void verschiebeSteine() {
     if (!stones.isEmpty()) {
@@ -52,6 +63,65 @@ public static ArrayList<Stone> getStones(){
 public static ArrayList<Stone> getSteine() {
     return stones;
 }
+
+private void startAbbauTimer() {
+    abbauTimer = new AnimationTimer() {
+        @Override
+        public void handle(long now) {
+            prüfeAufAbbauClicks();
+            
+        }
+    };
+    abbauTimer.start();
+}
+private void prüfeAufAbbauClicks() {
+    switch (abbauClicks) {
+        case 4:
+            this.imageView.setImage(new Image("file:rsc/BaumA1.png"));
+            break;
+        case 3:
+            this.imageView.setImage(new Image("file:rsc/BaumA2.png"));
+            break;
+        case 2:
+            this.imageView.setImage(new Image("file:rsc/BaumA3.png"));
+            break;
+        case 1:
+            this.imageView.setImage(new Image("file:rsc/BaumA4.png"));
+            break;
+    }
+
+    if (abbauClicks <= 0) {
+        entfernen(); // ⬅️ hier wird der Stein endgültig "entfernt"
+    }
+}
+
+
+public int getAbbauClicks(){
+    return abbauClicks;
+}
+
+public void setAbbauClicks(int abbauClicks){
+    this.abbauClicks = abbauClicks;
+}
+
+public double getX(){
+return imageView.getX();
+}
+
+public void pauseAbbauTimer() {
+    if (abbauTimer != null) abbauTimer.stop(); // ✅
+}
+
+public void resumeAbbauTimer() {
+    if (abbauTimer != null) abbauTimer.start(); // ✅
+}
+
+public boolean isRemoved() {
+    return removed;
+}
+
+
+
 
 }
 

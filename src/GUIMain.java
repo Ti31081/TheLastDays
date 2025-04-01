@@ -104,14 +104,17 @@ public class GUIMain extends Application {
                         sound.playJumpSound();
                         charakter.jumping();
                         break;
-                    case E:
+                        case E:
                         charakter.setWerkzeug("axt");
                         charakter.etwasAbbauen();
-                        break;
-                    case Q:
+                        charakter.setWerkzeug("Spitzhacke");
+                        charakter.SteinAbbauen();
+        break;
+        case Q:
                         charakter.getInventory().printWoodAmount();
-                        break;
-                }
+                        charakter.getInventory().printStoneAmount();
+                    }
+        
             }
         });
 
@@ -173,18 +176,30 @@ public class GUIMain extends Application {
     private void pauseGame() {
         charakter.getCollision().pauseMovementTimer();
         if (timerManager != null) timerManager.pauseTimer();
+    
         for (Tree tree : Tree.getTrees()) {
             tree.pauseAbbauTimer();
         }
+    
+        for (Stone stone : Stone.getSteine()) {
+            stone.pauseAbbauTimer();
+        }
     }
+    
     
     private void resumeGame() {
         charakter.getCollision().resumeMovementTimer();
         if (timerManager != null) timerManager.resumeTimer();
+    
         for (Tree tree : Tree.getTrees()) {
             tree.resumeAbbauTimer();
         }
+    
+        for (Stone stone : Stone.getSteine()) {
+            stone.resumeAbbauTimer();
+        }
     }
+    
 
     public void restartGame() {
         System.out.println("Spiel wird neu gestartet...");
@@ -272,6 +287,10 @@ public class GUIMain extends Application {
     public static void grassFromPaneRemove(Grassblocks grassblock){
         pane.getChildren().remove(grassblock.getImageView());
     }
+    public static void stoneFromPaneRemove(Stone stone){
+        pane.getChildren().remove(stone.getImageView());
+    }
+
     public static void steineSpawnen(){    
         if(Stone.getAnzahlSteine() < 5){       //Steine sollen sich immer wieder spawnen
         if(Math.random() < 0.2){
@@ -300,7 +319,15 @@ public class GUIMain extends Application {
                     grassPlazieren();
                     return true;
                 }
-
+                
+                if (charakter.getImageView().getX() + 90 >= 890) {
+                    Grassblocks.verschiebeBlöcke();
+                    Tree.verschiebeTrees();
+                    Stone.verschiebeSteine();
+                    grassPlazieren();
+                    return true;
+                }
+        
                 // Prüfe seitliche Kollision nur wenn der Charakter nicht über dem Block ist
                 if (charX + 60 >= block2X && charX <= block2X + 100) {
                     return true;
