@@ -10,11 +10,13 @@ public class Player {
     private Collision collision;
     private String werkzeug;
     private Inventory inventory;
+    private PlayerImage playerImage;
 
     public Player(String name) {
         this.name = name;
         this.werkzeug = "hand";
         this.inventory = new Inventory();
+        this.playerImage = new PlayerImage(this);
         this.bildName = "manchen2R.png";
         this.playerView.setImage(grafik);
         this.playerView.setFitHeight(200);
@@ -35,21 +37,30 @@ public class Player {
         collision.stopJump();
     }
 
+    public void aendereWidth(int px){
+        playerView.setFitWidth(px);
+    }
+
 
     public void startMovingRight() {
+        playerImage.MoveRight();
         collision.startMovingRight();
     }
 
     public void startMovingLeft() {
+        playerImage.MoveLeft();
         collision.startMovingLeft();
     }
 
     public void stopMovingRight() {
+        playerImage.StandRight();
         collision.stopMovingRight();
     }
 
     public void stopMovingLeft() {
+        playerImage.StandLeft();
         collision.stopMovingLeft();
+        
     }
 
     public void setImage(String image){
@@ -61,6 +72,19 @@ public class Player {
 
     public void setWerkzeug(String werkzeug){
         this.werkzeug = werkzeug;
+    }
+
+    public String getWerkzeug(){
+        return werkzeug;
+    }
+
+    public void ImageAktualisieren(){
+        if (bildName == "manchen2L.png" || bildName == "manchenMoveL.png" || bildName == "AxtLL.png" || bildName == "AxtLS.png") {
+            playerImage.StandLeft();
+        }
+        else{
+            playerImage.StandRight();
+        }
     }
 
     public int etwasAbbauen(){

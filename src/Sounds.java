@@ -13,7 +13,7 @@ public class Sounds {
             // Lade die Sound-Dateien aus dem rsc Ordner
             walkClip = loadSound("rsc/walking.wav");
             jumpClip = loadSound("rsc/jumping.wav");
-            landClip = loadSound("rsc/land.wav");
+            landClip = loadSound("rsc/walking.wav");
         } catch (Exception e) {
             System.err.println("Fehler beim Laden der Sound-Dateien: " + e.getMessage());
         }

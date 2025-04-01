@@ -103,26 +103,39 @@ public class GUIMain extends Application {
                     case D:
                         sound.playWalkSound();
                         charakter.startMovingRight();
-                        if (!charakter.getImage().equals("manchenMoveR.png")) {
-                            charakter.setImage("manchenMoveR.png");
-                        }
+//                        if (!charakter.getImage().equals("manchenMoveR.png")) {
+//                            charakter.setImage("manchenMoveR.png");
+//                        }
                         break;
                     case A:
                         charakter.startMovingLeft();
-                        if (!charakter.getImage().equals("manchenMoveL.png")) {
-                            charakter.setImage("manchenMoveL.png");
-                        }
+//                        if (!charakter.getImage().equals("manchenMoveL.png")) {
+//                            charakter.setImage("manchenMoveL.png");
+//                        }
                         break;
                     case SPACE:
                         sound.playJumpSound();
                         charakter.jumping();
                         break;
                     case E:
-                        charakter.setWerkzeug("axt");
+                        //charakter.setWerkzeug("axt");
                         charakter.etwasAbbauen();
                         break;
                     case Q:
                         charakter.getInventory().printWoodAmount();
+                        break;
+                    case DIGIT1:
+                        charakter.setWerkzeug("hand");
+                        charakter.ImageAktualisieren();
+                        break;
+                    case DIGIT2:
+                        charakter.setWerkzeug("axt");
+                        charakter.ImageAktualisieren();
+                        charakter.aendereWidth(80);
+                        break;
+                    case DIGIT3:
+                        charakter.setWerkzeug("Picke");
+                        charakter.ImageAktualisieren();
                         break;
                 }
             }
@@ -134,11 +147,11 @@ public class GUIMain extends Application {
                     case D:
                         sound.stopAllSounds();
                         charakter.stopMovingRight();
-                        charakter.setImage("manchen2R.png");
+//                        charakter.setImage("manchen2R.png");
                         break;
                     case A:
                         charakter.stopMovingLeft();
-                        charakter.setImage("manchen2L.png");
+//                        charakter.setImage("manchen2L.png");
                         break;
                     case SPACE:
                         charakter.stopJumping();
