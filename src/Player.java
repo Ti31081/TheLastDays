@@ -96,7 +96,71 @@ public class Player {
         return 1;
     }
 
+    public int EisenAbbauen(){
+        if (this.werkzeug == "Spitzhacke") {
+            for (Eisen eisen : Eisen.getEisen()){
+                double min = eisen.getX() + 50;
+                double max = eisen.getX() + 200;
+                if (this.playerView.getX() + 60 >= min && this.playerView.getX() <= max) {
+                    if (eisen.getAbbauClicks() > 0) {
+                        eisen.setAbbauClicks(eisen.getAbbauClicks() - 1);
+                        if (eisen.getAbbauClicks() == 0) {
+                            GUIMain.eisenFromPaneRemove(eisen);
+                            inventory.addEisen(2);
+                            return 0;
+                        }
+                        
+                    }
+                    else if (eisen.getAbbauClicks() == 0) {
+                        GUIMain.eisenFromPaneRemove(eisen);
+                        inventory.addEisen(2);
+                        return 0;
+                    }
+                    
+                }
+            }
+            
+            
+            return 0;
+            
+        }
+        
+        
+        return 1;
+    }
 
+    public int SchwarzpulverAbbauen(){
+        if (this.werkzeug == "Spitzhacke") {
+            for (Schwarzpulver sp : Schwarzpulver.getSchwarzpulver()){
+                double min = sp.getX() + 50;
+                double max = sp.getX() + 200;
+                if (this.playerView.getX() + 60 >= min && this.playerView.getX() <= max) {
+                    if (sp.getAbbauClicks() > 0) {
+                        sp.setAbbauClicks(sp.getAbbauClicks() - 1);
+                        if (sp.getAbbauClicks() == 0) {
+                            GUIMain.schwarzpulverFromPaneRemove(sp);
+                            inventory.addSchwarupulver(1);
+                            return 0;
+                        }
+                        
+                    }
+                    else if (sp.getAbbauClicks() == 0) {
+                        GUIMain.schwarzpulverFromPaneRemove(sp);
+                        inventory.addSchwarupulver(1);
+                        return 0;
+                    }
+                    
+                }
+            }
+            
+            
+            return 0;
+            
+        }
+        
+        
+        return 1;
+    }
     public int etwasAbbauen(){
         if ("axt".equals(this.werkzeug)) {
             for (Tree tree : Tree.getTrees()){

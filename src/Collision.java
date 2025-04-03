@@ -100,6 +100,8 @@ public class Collision {
                 Grassblocks.verschiebeBlöcke();
                 Tree.verschiebeTrees();
                 Stone.verschiebeSteine();
+                Eisen.verschiebeEisen();
+                Schwarzpulver.verschiebeSchwarzpulver();
             }
         }
     }
@@ -218,7 +220,42 @@ public class Collision {
     
         return horizontalOverlap && verticalCollision;
     }
+
+    private boolean checkVerticalCollision(Eisen eisen) {
+        if (eisen == null || eisen.getImageView() == null || eisen.getAbbauClicks() <= 0) return false; // bereits abgebaut
+        if (eisen.isRemoved()) return false;
     
+        double playerBottom = player.getImageView().getY() + player.getImageView().getFitHeight();
+        double playerTop = player.getImageView().getY();
+        double eisenTop = eisen.getImageView().getY();
+        double playerRight = player.getImageView().getX() + player.getImageView().getFitWidth();
+        double playerLeft = player.getImageView().getX();
+        double eisenRight = eisen.getImageView().getX() + eisen.getImageView().getFitWidth() - 30;
+        double eisenLeft = eisen.getImageView().getX() + 32;
+    
+        boolean horizontalOverlap = playerRight > eisenLeft && playerLeft < eisenRight;
+        boolean verticalCollision = playerBottom >= eisenTop && playerTop < eisenTop;
+    
+        return horizontalOverlap && verticalCollision;
+    }
+    
+    private boolean checkVerticalCollision(Schwarzpulver schwarzpulver) {
+        if (schwarzpulver == null || schwarzpulver.getImageView() == null || schwarzpulver.getAbbauClicks() <= 0) return false; // bereits abgebaut
+        if (schwarzpulver.isRemoved()) return false;
+    
+        double playerBottom = player.getImageView().getY() + player.getImageView().getFitHeight();
+        double playerTop = player.getImageView().getY();
+        double schwarzpTop = schwarzpulver.getImageView().getY();
+        double playerRight = player.getImageView().getX() + player.getImageView().getFitWidth();
+        double playerLeft = player.getImageView().getX();
+        double schwarzpRight = schwarzpulver.getImageView().getX() + schwarzpulver.getImageView().getFitWidth() - 30;
+        double schwarzpLeft = schwarzpulver.getImageView().getX() + 32;
+    
+        boolean horizontalOverlap = playerRight > schwarzpLeft && playerLeft < schwarzpRight;
+        boolean verticalCollision = playerBottom >= schwarzpTop && playerTop < schwarzpTop;
+    
+        return horizontalOverlap && verticalCollision;
+    }
 
     private boolean checkHorizontalCollision(Grassblocks block) {
         double playerBottom = player.getImageView().getY() + player.getImageView().getFitHeight();

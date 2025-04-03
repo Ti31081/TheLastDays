@@ -36,7 +36,7 @@ public class TimerManager {
     private void updateTimer() {
         secondsElapsed++;
         updateLabel();
-        if (secondsElapsed >= 20) { // Hier kannst du die Zeit einstellen die der Spieler hat, in sek (20 sek zum Testen)
+        if (secondsElapsed >= 80) { // Hier kannst du die Zeit einstellen die der Spieler hat, in sek (20 sek zum Testen)
             timer.stop();
             showEndScreen();
         }

@@ -24,6 +24,8 @@ public class GUIMain extends Application {
     private static int grassblocksAnzahl = 0;
     private static int treeIDCounter = 1;
     private static int stoneIDCounter = 1;
+    private static int eisenIDCounter = 1;
+    private static int schwarzpIDCounter = 1;
     private static Player charakter = new Player("Tom");
     private static Pane pane = new Pane();
     private static Pane pane2 = new Pane();
@@ -60,7 +62,7 @@ public class GUIMain extends Application {
             for (int i = 0; i < quantity; i++) {
                 Grassblocks grassblock = new Grassblocks(grassblocksAnzahl);
                 grassblocksAnzahl++;
-                
+                 
                 pane.getChildren().add(grassblock.getImageView());
             }
 
@@ -109,10 +111,15 @@ public class GUIMain extends Application {
                         charakter.etwasAbbauen();
                         charakter.setWerkzeug("Spitzhacke");
                         charakter.SteinAbbauen();
+                        charakter.EisenAbbauen();
+                        charakter.SchwarzpulverAbbauen();
         break;
         case Q:
                         charakter.getInventory().printWoodAmount();
                         charakter.getInventory().printStoneAmount();
+                        charakter.getInventory().printEisenAmount();
+                        charakter.getInventory().printSchwarzpulverAmount();
+
                     }
         
             }
@@ -181,8 +188,12 @@ public class GUIMain extends Application {
             tree.pauseAbbauTimer();
         }
     
-        for (Stone stone : Stone.getSteine()) {
-            stone.pauseAbbauTimer();
+        for (Eisen eisen : Eisen.getEisen()) {
+            eisen.pauseAbbauTimer();
+        }
+
+        for (Schwarzpulver sp : Schwarzpulver.getSchwarzpulver()) {
+            sp.pauseAbbauTimer();
         }
     }
     
@@ -198,6 +209,14 @@ public class GUIMain extends Application {
         for (Stone stone : Stone.getSteine()) {
             stone.resumeAbbauTimer();
         }
+
+        for (Eisen eisen : Eisen.getEisen()) {
+            eisen.resumeAbbauTimer();
+        }
+
+        for (Schwarzpulver sp : Schwarzpulver.getSchwarzpulver()) {
+            sp.resumeAbbauTimer();
+        }
     }
     
 
@@ -209,12 +228,16 @@ public class GUIMain extends Application {
         grassblocksAnzahl = 0;
         treeIDCounter = 1;
         stoneIDCounter = 1;
+        eisenIDCounter = 1;
+        schwarzpIDCounter = 1;
         charakter = new Player("Tom");
     
         // Listen wirklich leeren
         Grassblocks.getGrassblocks().clear();
         Tree.getTrees().clear();
-        Stone.getSteine().clear(); // sicherstellen, dass es diese Methode gibt
+        Stone.getSteine().clear();
+        Eisen.getEisen().clear(); 
+        Schwarzpulver.getSchwarzpulver().clear();// sicherstellen, dass es diese Methode gibt
     
         // Hintergrund
         Image backgroundImage = new Image("file:rsc/Background-2.0.3.png");
@@ -265,6 +288,9 @@ public class GUIMain extends Application {
             if (grass.getBewegung() == false) {
                 treePlazieren();
                 steineSpawnen();
+                eisenSpawnen();
+                schwarzpSpawnen();
+        
             }
             
 
@@ -290,13 +316,39 @@ public class GUIMain extends Application {
     public static void stoneFromPaneRemove(Stone stone){
         pane.getChildren().remove(stone.getImageView());
     }
+    public static void eisenFromPaneRemove(Eisen eisen){
+        pane.getChildren().remove(eisen.getImageView());
+    }
+    public static void schwarzpulverFromPaneRemove(Schwarzpulver schwarzp){
+        pane.getChildren().remove(schwarzp.getImageView());
+    }
+
 
     public static void steineSpawnen(){    
-        if(Stone.getAnzahlSteine() < 5){       //Steine sollen sich immer wieder spawnen
+        if(Stone.getAnzahlSteine() < 100){       //Steine sollen sich immer wieder spawnen
         if(Math.random() < 0.2){
             Stone stone = new Stone(Grassblocks.getLastX() + 8 , Grassblocks.getLastY() - 40);
             pane.getChildren().add(stone.getImageView());
             System.out.println("Neuer Stein hinzugefügt");
+        }
+    }
+    }
+    public static void eisenSpawnen(){    
+        if(Eisen.getAnzahlEisen() < 100){       //Steine sollen sich immer wieder spawnen
+        if(Math.random() < 0.1){
+            Eisen eisen = new Eisen(Grassblocks.getLastX() + 8 , Grassblocks.getLastY() - 40);
+            pane.getChildren().add(eisen.getImageView());
+            System.out.println("Neues Eisenerz hinzugefügt");
+        }
+    }
+    }
+
+    public static void schwarzpSpawnen(){    
+        if(Schwarzpulver.getAnzahlSchwarzpulver() < 100){       //Steine sollen sich immer wieder spawnen
+        if(Math.random() < 0.1){
+            Schwarzpulver sp = new Schwarzpulver(Grassblocks.getLastX() + 8 , Grassblocks.getLastY() - 40);
+            pane.getChildren().add(sp.getImageView());
+            System.out.println("Neues Schwarpulver hinzugefügt");
         }
     }
     }
@@ -316,6 +368,8 @@ public class GUIMain extends Application {
                     Grassblocks.verschiebeBlöcke();
                     Tree.verschiebeTrees();
                     Stone.verschiebeSteine();
+                    Eisen.verschiebeEisen();
+                    Schwarzpulver.verschiebeSchwarzpulver();
                     grassPlazieren();
                     return true;
                 }
@@ -324,6 +378,8 @@ public class GUIMain extends Application {
                     Grassblocks.verschiebeBlöcke();
                     Tree.verschiebeTrees();
                     Stone.verschiebeSteine();
+                    Eisen.verschiebeEisen();
+                    Schwarzpulver.verschiebeSchwarzpulver();
                     grassPlazieren();
                     return true;
                 }

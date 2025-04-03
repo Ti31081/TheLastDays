@@ -2,6 +2,7 @@ public class Inventory {
     private int wood;
     private int stone;
     private int iron;
+    private int gunpowder;
     private int gold;
     private int diamond;
     private int emerald;
@@ -101,6 +102,22 @@ public class Inventory {
 
     public void printStoneAmount() {
         System.out.println("Du hast " + this.wood + " Stein.");
+    }
+
+    public void addEisen(int amount){
+        this.iron += amount;
+    }
+
+    public void printEisenAmount() {
+        System.out.println("Du hast " + this.iron + " Eisen.");
+    }
+
+    public void printSchwarzpulverAmount() {
+        System.out.println("Du hast " + this.gunpowder + " Schwarzpulver.");
+    }
+
+    public void addSchwarupulver(int amount){
+        this.gunpowder += amount;
     }
 
     public int getWood() {
