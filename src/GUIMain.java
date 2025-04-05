@@ -34,6 +34,13 @@ public class GUIMain extends Application {
     private TimerManager timerManager;
     private Pane startScreenPane = new Pane();
     private static boolean isGamePaused = false;
+    private boolean isInitialStart = true;
+    private Button startButton;
+    private Button restartButton;
+    private Quests quests;
+
+
+
     private Timeline fallCheck;
 
     @Override
@@ -87,7 +94,8 @@ public class GUIMain extends Application {
             }
         
             setupStartScreen();
-            togglePause();
+            isGamePaused = true; // Spiel ist am Anfang pausiert
+            pauseGame();
         
             // Füge Timer für Fall-Überprüfung hinzu
             fallCheck = new Timeline(new KeyFrame(Duration.millis(100), e -> checkPlayerFall()));
@@ -96,9 +104,7 @@ public class GUIMain extends Application {
         
             Scene scene = new Scene(pane, 1200, 600);
             scene.setOnKeyPressed(event -> {
-                if (isGamePaused && event.getCode() != KeyCode.ESCAPE) return; // Ignoriere alle Tasten außer ESC wenn pausiert
-                
-                if (event.getCode() == KeyCode.ESCAPE) {
+                if (event.getCode() == KeyCode.ESCAPE && !startScreenPane.isVisible()) {
                     togglePause();
                 }
                 if (!isGamePaused) {
@@ -138,8 +144,6 @@ public class GUIMain extends Application {
             });
         
             scene.setOnKeyReleased(event -> {
-                if (isGamePaused && event.getCode() != KeyCode.ESCAPE) return; // Ignoriere alle Tasten außer ESC wenn pausiert
-                
                 if (!isGamePaused) {
                     switch (event.getCode()) {
                         case D:
@@ -172,32 +176,108 @@ public class GUIMain extends Application {
     private void setupStartScreen() {
         startScreenPane.setPrefSize(1200, 600);
         startScreenPane.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5);");
-        Label pauseLabel = new Label("Game Paused");
+    
+        // Hintergrundbild
         Image backgroundImage = new Image("file:rsc/Startbildschirm.png");
         ImageView background = new ImageView(backgroundImage);
         background.setFitWidth(1200);
         background.setFitHeight(600);
-        pauseLabel.setStyle("-fx-text-fill: white; -fx-font-size: 24px;");
-        pauseLabel.setLayoutX(550);
-        pauseLabel.setLayoutY(300);
-
-        startScreenPane.getChildren().add(background);
-        startScreenPane.setVisible(false);
-        pane.getChildren().remove(startScreenPane);
+    
+        // START-Button
+        Button startButton = new Button("START");
+        styleMenuButton(startButton);
+        startButton.setLayoutX(525);
+        startButton.setLayoutY(320);
+        startButton.setOnAction(e -> {
+            startScreenPane.setVisible(false);
+            isGamePaused = false;
+            resumeGame();
+            showGameElements(true);
+            startButton.setVisible(false);
+        });
+    
+        // NEUSTART-Button
+        Button restartButton = new Button("NEUSTART");
+        styleMenuButton(restartButton);
+        restartButton.setLayoutX(525);
+        restartButton.setLayoutY(320);
+        restartButton.setVisible(false); // nur bei ESC sichtbar
+        restartButton.setOnAction(e -> {
+            startScreenPane.setVisible(false);
+            isGamePaused = false;
+            restartGame();
+            showGameElements(true);
+        });
+    
+        // BESTENLISTE-Button
+        Button highscoreButton = new Button("BESTENLISTE");
+        styleMenuButton(highscoreButton);
+        highscoreButton.setLayoutX(525);
+        highscoreButton.setLayoutY(370);
+        highscoreButton.setOnAction(e -> {
+            System.out.println("Bestenliste anzeigen (z. B. neues Fenster)");
+        });
+    
+        // Alles zum Pane hinzufügen
+        startScreenPane.getChildren().addAll(background, startButton, restartButton, highscoreButton);
         pane.getChildren().add(startScreenPane);
+    
+        // Speichern für ESC-Steuerung
+        this.startButton = startButton;
+        this.restartButton = restartButton;
     }
+    
+    
+    
+    
+    private void styleMenuButton(Button button) {
+        button.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 20px; -fx-border-color: #5A3E1B; -fx-border-width: 2px;");
+        button.setPrefWidth(150);
+        button.setPrefHeight(40);
+    }    
+    
+    private void showGameElements(boolean visible) {
+        for (Grassblocks g : Grassblocks.getGrassblocks()) {
+            g.getImageView().setVisible(visible);
+        }
+        for (Tree t : Tree.getTrees()) {
+            t.getImageView().setVisible(visible);
+        }
+        for (Stone s : Stone.getSteine()) {
+            s.getImageView().setVisible(visible);
+        }
+        for (Eisen e : Eisen.getEisen()) {
+            e.getImageView().setVisible(visible);
+        }
+        for (Schwarzpulver sp : Schwarzpulver.getSchwarzpulver()) {
+            sp.getImageView().setVisible(visible);
+        }
+        charakter.getImageView().setVisible(visible);
+        timeLabel.setVisible(visible);
+    }
+    
+    
 
     private void togglePause() {
-        isGamePaused = !isGamePaused;
-        pane.getChildren().remove(startScreenPane);
-        pane.getChildren().add(startScreenPane);
-        startScreenPane.setVisible(isGamePaused);
-        if (isGamePaused) {
-            pauseGame();
-        } else {
-            resumeGame();
+        if (!startScreenPane.isVisible()) {
+            isGamePaused = !isGamePaused;
+            startScreenPane.setVisible(isGamePaused);
+    
+            if (isGamePaused) {
+                if (restartButton != null) restartButton.setVisible(true);
+                if (startButton != null) startButton.setVisible(false);
+                pauseGame();
+                showGameElements(false); // verstecke Objekte
+            } else {
+                if (restartButton != null) restartButton.setVisible(false);
+                resumeGame();
+                showGameElements(true); // zeige Objekte
+            }
         }
     }
+    
+    
+    
 
     private void pauseGame() {
         charakter.getCollision().pauseMovementTimer();
@@ -259,14 +339,14 @@ public class GUIMain extends Application {
         stoneIDCounter = 1;
         eisenIDCounter = 1;
         schwarzpIDCounter = 1;
-        charakter = new Player("Tom");
+        charakter = new Player("Tom"); // Neuer Spieler
     
         // Listen wirklich leeren
         Grassblocks.getGrassblocks().clear();
         Tree.getTrees().clear();
         Stone.getSteine().clear();
         Eisen.getEisen().clear(); 
-        Schwarzpulver.getSchwarzpulver().clear();// sicherstellen, dass es diese Methode gibt
+        Schwarzpulver.getSchwarzpulver().clear();
     
         // Hintergrund
         Image backgroundImage = new Image("file:rsc/Background-2.0.3.png");
@@ -289,6 +369,9 @@ public class GUIMain extends Application {
         playerView.setY(ersterBlock.getImageView().getY() - playerView.getFitHeight());
         pane.getChildren().add(playerView);
     
+        // ⬇️ Jetzt erst Quests neu starten – nach allen anderen Elementen
+        quests = new Quests(charakter);
+    
         // Timer & UI zurücksetzen
         timerManager.restartTimer();
         pane.getChildren().add(timeLabel);
@@ -299,6 +382,7 @@ public class GUIMain extends Application {
         isGamePaused = false;
         pane.requestFocus();
     }
+    
     
     
 

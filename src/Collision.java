@@ -183,6 +183,22 @@ public class Collision {
                 break;
             }
         }
+        for (Eisen eisen : Eisen.getEisen()) {
+            if (checkVerticalCollision(eisen)) {
+                newY = eisen.getImageView().getY() - player.getImageView().getFitHeight();
+                velocityY = 0;
+                jumpCounter = 0;  // Player can jump if standing on iron
+                break;
+            }
+        }
+        for (Schwarzpulver sp : Schwarzpulver.getSchwarzpulver()) {
+            if (checkVerticalCollision(sp)) {
+                newY = sp.getImageView().getY() - player.getImageView().getFitHeight();
+                velocityY = 0;
+                jumpCounter = 0;  // Player can jump if standing on gunpowder
+                break;
+            }
+        }
         //System.out.println((int) newY);
         player.getImageView().setY((int) newY);
     }
@@ -257,23 +273,37 @@ public class Collision {
         return horizontalOverlap && verticalCollision;
     }
 
-    private boolean checkHorizontalCollision(Grassblocks block) {
+    private boolean checkHorizontalCollision(Object object) {
         double playerBottom = player.getImageView().getY() + player.getImageView().getFitHeight();
         double playerTop = player.getImageView().getY();
-        double blockTop = block.getImageView().getY();
-        double blockBottom = block.getImageView().getY() + block.getImageView().getFitHeight();
+        double objectTop = 0;
+        double objectBottom = 0;
+        double objectRight = 0;
+        double objectLeft = 0;
+
+        if (object instanceof Eisen) {
+            Eisen eisen = (Eisen) object;
+            objectTop = eisen.getY();
+            objectBottom = eisen.getY() + 50;
+            objectRight = eisen.getX() + 50;
+            objectLeft = eisen.getX();
+        } else if (object instanceof Schwarzpulver) {
+            Schwarzpulver sp = (Schwarzpulver) object;
+            objectTop = sp.getY();
+            objectBottom = sp.getY() + 50;
+            objectRight = sp.getX() + 50;
+            objectLeft = sp.getX();
+        }
+
         double playerRight = player.getImageView().getX() + player.getImageView().getFitWidth();
         double playerLeft = player.getImageView().getX();
-        double blockRight = block.getImageView().getX() + block.getImageView().getFitWidth();
-        double blockLeft = block.getImageView().getX();
-        
 
-        // Überprüfe ob der Spieler vertikal mit dem Block überlappt
-        boolean verticalOverlap = playerBottom > blockTop && playerTop < blockBottom;
+        // Überprüfe ob der Spieler vertikal mit dem Objekt überlappt
+        boolean verticalOverlap = playerBottom > objectTop && playerTop < objectBottom;
         
-        // Überprüfe ob der Spieler horizontal mit dem Block kollidiert
-        boolean horizontalCollision = (playerRight >= blockLeft && playerRight <= blockLeft + 10) ||
-                                    (playerLeft <= blockRight && playerLeft >= blockRight - 10);
+        // Überprüfe ob der Spieler horizontal mit dem Objekt kollidiert
+        boolean horizontalCollision = (playerRight >= objectLeft && playerRight <= objectLeft + 10) ||
+                                    (playerLeft <= objectRight && playerLeft >= objectRight - 10);
 
         return verticalOverlap && horizontalCollision;
     }

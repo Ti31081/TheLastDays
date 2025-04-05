@@ -103,7 +103,11 @@ public void setAbbauClicks(int abbauClicks){
 }
 
 public double getX(){
-return imageView.getX();
+    return imageView.getX();
+}
+
+public double getY(){
+    return imageView.getY();
 }
 
 public void pauseAbbauTimer() {
