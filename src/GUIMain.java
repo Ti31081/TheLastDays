@@ -104,45 +104,49 @@ public class GUIMain extends Application {
         
             Scene scene = new Scene(pane, 1200, 600);
             scene.setOnKeyPressed(event -> {
-                if (event.getCode() == KeyCode.ESCAPE && !startScreenPane.isVisible()) {
-                    togglePause();
-                }
-                if (!isGamePaused) {
-                    switch (event.getCode()) {
-                        case D:
-                            sound.playWalkSound();
-                            charakter.startMovingRight();
-                            if (!charakter.getImage().equals("manchenMoveR.png")) {
-                                charakter.setImage("manchenMoveR.png");
-                            }
-                            break;
-                        case A:
-                            charakter.startMovingLeft();
-                            if (!charakter.getImage().equals("manchenMoveL.png")) {
-                                charakter.setImage("manchenMoveL.png");
-                            }
-                            break;
-                        case SPACE:
-                            sound.playJumpSound();
-                            charakter.jumping();
-                            break;
-                        case E:
-                            charakter.setWerkzeug("axt");
-                            charakter.etwasAbbauen();
-                            charakter.setWerkzeug("Spitzhacke");
-                            charakter.SteinAbbauen();
-                            charakter.EisenAbbauen();
-                            charakter.SchwarzpulverAbbauen();
-                            break;
-                        case Q:
-                            charakter.getInventory().printWoodAmount();
-                            charakter.getInventory().printStoneAmount();
-                            charakter.getInventory().printEisenAmount();
-                            charakter.getInventory().printSchwarzpulverAmount();
+                if (isGamePaused || startScreenPane.isVisible()) {
+                    // ESC funktioniert trotzdem
+                    if (event.getCode() == KeyCode.ESCAPE) {
+                        togglePause();
                     }
+                    return;
+                }
+            
+                switch (event.getCode()) {
+                    case D:
+                        sound.playWalkSound();
+                        charakter.startMovingRight();
+                        if (!charakter.getImage().equals("manchenMoveR.png")) {
+                            charakter.setImage("manchenMoveR.png");
+                        }
+                        break;
+                    case A:
+                        charakter.startMovingLeft();
+                        if (!charakter.getImage().equals("manchenMoveL.png")) {
+                            charakter.setImage("manchenMoveL.png");
+                        }
+                        break;
+                    case SPACE:
+                        sound.playJumpSound();
+                        charakter.jumping();
+                        break;
+                    case E:
+                        charakter.setWerkzeug("axt");
+                        charakter.etwasAbbauen();
+                        charakter.setWerkzeug("Spitzhacke");
+                        charakter.SteinAbbauen();
+                        charakter.EisenAbbauen();
+                        charakter.SchwarzpulverAbbauen();
+                        break;
+                    case Q:
+                        charakter.getInventory().printWoodAmount();
+                        charakter.getInventory().printStoneAmount();
+                        charakter.getInventory().printEisenAmount();
+                        charakter.getInventory().printSchwarzpulverAmount();
+                        break;
                 }
             });
-        
+            
             scene.setOnKeyReleased(event -> {
                 if (!isGamePaused) {
                     switch (event.getCode()) {
@@ -332,6 +336,22 @@ public class GUIMain extends Application {
     public void restartGame() {
         System.out.println("Spiel wird neu gestartet...");
     
+        // ❗ Stoppe alle Timer und pausierende Aktionen VOR dem Reset
+        pauseGame();
+    
+        // ❗ Stoppe Bewegungen des Charakters
+        if (charakter != null) {
+            charakter.stopMovingLeft();
+            charakter.stopMovingRight();
+            charakter.stopJumping();
+        }
+    
+        // ❗ Stoppe und leere alle vorhandenen Timer
+        if (fallCheck != null) {
+            fallCheck.stop();
+            fallCheck = null;
+        }
+    
         // Reset Spielfeld & Daten
         pane.getChildren().clear();
         grassblocksAnzahl = 0;
@@ -369,7 +389,7 @@ public class GUIMain extends Application {
         playerView.setY(ersterBlock.getImageView().getY() - playerView.getFitHeight());
         pane.getChildren().add(playerView);
     
-        // ⬇️ Jetzt erst Quests neu starten – nach allen anderen Elementen
+        // Quests neu starten
         quests = new Quests(charakter);
     
         // Timer & UI zurücksetzen
@@ -378,11 +398,17 @@ public class GUIMain extends Application {
         timeLabel.setLayoutX(10);
         timeLabel.setLayoutY(10);
     
+        // 🆕 Fall-Check neu starten (nur 1x!)
+        fallCheck = new Timeline(new KeyFrame(Duration.millis(100), e -> checkPlayerFall()));
+        fallCheck.setCycleCount(Timeline.INDEFINITE);
+        fallCheck.play();
+    
+        // Startbildschirm vorbereiten, aber nicht anzeigen
         setupStartScreen();
         isGamePaused = false;
+    
         pane.requestFocus();
     }
-    
     
     
 
@@ -412,11 +438,42 @@ public class GUIMain extends Application {
         }
         
     }
+    private static boolean istPositionBelegt(double x, double y) {
+        double breite = 90;
+        double höhe = 90;
+    
+        for (Stone s : Stone.getSteine()) {
+            if (überlappt(x, y, breite, höhe, s.getX(), s.getImageView().getY(), breite, höhe)) {
+                return true;
+            }
+        }
+        for (Eisen e : Eisen.getEisen()) {
+            if (überlappt(x, y, breite, höhe, e.getX(), e.getImageView().getY(), breite, höhe)) {
+                return true;
+            }
+        }
+        for (Schwarzpulver sp : Schwarzpulver.getSchwarzpulver()) {
+            if (überlappt(x, y, breite, höhe, sp.getX(), sp.getImageView().getY(), breite, höhe)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    private static boolean überlappt(double x1, double y1, double w1, double h1,
+                                     double x2, double y2, double w2, double h2) {
+        return x1 < x2 + w2 &&
+               x1 + w1 > x2 &&
+               y1 < y2 + h2 &&
+               y1 + h1 > y2;
+    }
+    
+    
     private static void treePlazieren(){
         if (isGamePaused) return; // Verhindere Spawning während Pause/Game Over
         
-        if (Math.random() < 0.2) {
-            Tree tree = new Tree(treeIDCounter, Grassblocks.getLastX() - 60, Grassblocks.getLastY() - 345);
+        if (Math.random() < 0.3) {
+            Tree tree = new Tree(treeIDCounter, Grassblocks.getLastX() - 60, Grassblocks.getLastY() - 350);
             pane.getChildren().add(tree.getImageView());
             System.out.println("baum erstellt");
             treeIDCounter++;
@@ -442,39 +499,51 @@ public class GUIMain extends Application {
 
 
     public static void steineSpawnen(){    
-        if (isGamePaused) return; // Verhindere Spawning während Pause/Game Over
-        
-        if(Stone.getAnzahlSteine() < 100){       //Steine sollen sich immer wieder spawnen
-        if(Math.random() < 0.2){
-            Stone stone = new Stone(Grassblocks.getLastX() + 8 , Grassblocks.getLastY() - 40);
-            pane.getChildren().add(stone.getImageView());
-            System.out.println("Neuer Stein hinzugefügt");
+        if (isGamePaused) return;
+    
+        double x = Grassblocks.getLastX() + 8;
+        double y = Grassblocks.getLastY() - 40;
+    
+        if (Stone.getAnzahlSteine() < 100 && Math.random() < 0.4) {
+            if (!istPositionBelegt(x, y)) {
+                Stone stone = new Stone(x, y);
+                pane.getChildren().add(stone.getImageView());
+                System.out.println("Neuer Stein hinzugefügt");
+            }
         }
     }
-    }
+    
     public static void eisenSpawnen(){    
-        if (isGamePaused) return; // Verhindere Spawning während Pause/Game Over
-        
-        if(Eisen.getAnzahlEisen() < 100){       //Steine sollen sich immer wieder spawnen
-        if(Math.random() < 0.1){
-            Eisen eisen = new Eisen(Grassblocks.getLastX() + 8 , Grassblocks.getLastY() - 40);
-            pane.getChildren().add(eisen.getImageView());
-            System.out.println("Neues Eisenerz hinzugefügt");
+        if (isGamePaused) return;
+    
+        double x = Grassblocks.getLastX() + 8;
+        double y = Grassblocks.getLastY() - 60;
+    
+        if (Eisen.getAnzahlEisen() < 100 && Math.random() < 0.2) {
+            if (!istPositionBelegt(x, y)) {
+                Eisen eisen = new Eisen(x, y);
+                pane.getChildren().add(eisen.getImageView());
+                System.out.println("Neues Eisenerz hinzugefügt");
+            }
         }
     }
-    }
+    
 
     public static void schwarzpSpawnen(){    
-        if (isGamePaused) return; // Verhindere Spawning während Pause/Game Over
-        
-        if(Schwarzpulver.getAnzahlSchwarzpulver() < 100){       //Steine sollen sich immer wieder spawnen
-        if(Math.random() < 0.1){
-            Schwarzpulver sp = new Schwarzpulver(Grassblocks.getLastX() + 8 , Grassblocks.getLastY() - 40);
-            pane.getChildren().add(sp.getImageView());
-            System.out.println("Neues Schwarpulver hinzugefügt");
+        if (isGamePaused) return;
+    
+        double x = Grassblocks.getLastX() + 8;
+        double y = Grassblocks.getLastY() - 70;
+    
+        if (Schwarzpulver.getAnzahlSchwarzpulver() < 100 && Math.random() < 0.1) {
+            if (!istPositionBelegt(x, y)) {
+                Schwarzpulver sp = new Schwarzpulver(x, y);
+                pane.getChildren().add(sp.getImageView());
+                System.out.println("Neues Schwarzpulver hinzugefügt");
+            }
         }
     }
-    }
+    
     public static boolean weiterBewegen(){
         if (charakter.getImageView().getX() + 110 >= 890) {
             // Prüfe für jeden Grassblock die seitliche Kollision
@@ -567,6 +636,8 @@ public class GUIMain extends Application {
 
         gameOverPane.getChildren().addAll(gameOverLabel, restartButton);
         pane.getChildren().add(gameOverPane);
+        gameOverPane.toFront(); // Damit es wirklich oben ist
+
 
         // Deaktiviere Tastatureingaben, aber lasse ESC zu
         Scene scene = pane.getScene();

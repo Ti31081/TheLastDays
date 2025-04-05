@@ -4,12 +4,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 public class Eisen {
     private static ArrayList<Eisen> eisen = new ArrayList<Eisen>();
-    private final Image eisenImage = new Image("file:rsc/eisenErz.png");
+    private final Image eisenImage = new Image("file:rsc/eisen.png");
     private ImageView imageView = new ImageView();
     private static int anzahlEisen = 0; 
     Grassblocks grassblocks;
     private AnimationTimer abbauTimer;
-    private int abbauClicks = 6;
+    private int abbauClicks = 5;
     private boolean removed = false;
 
 
@@ -75,16 +75,16 @@ private void startAbbauTimer() {
 private void prüfeAufAbbauClicks() {
     switch (abbauClicks) {
         case 4:
-            this.imageView.setImage(new Image("file:rsc/BaumA1.png"));
+            this.imageView.setImage(new Image("file:rsc/eisen1.png"));
             break;
         case 3:
-            this.imageView.setImage(new Image("file:rsc/BaumA2.png"));
+            this.imageView.setImage(new Image("file:rsc/eisen2.png"));
             break;
         case 2:
-            this.imageView.setImage(new Image("file:rsc/BaumA3.png"));
+            this.imageView.setImage(new Image("file:rsc/eisen3.png"));
             break;
         case 1:
-            this.imageView.setImage(new Image("file:rsc/BaumA4.png"));
+            this.imageView.setImage(new Image("file:rsc/eisen4.png"));
             break;
     }
 

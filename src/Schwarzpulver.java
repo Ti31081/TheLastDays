@@ -4,7 +4,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 public class Schwarzpulver {
     private static ArrayList<Schwarzpulver> schwarzp = new ArrayList<Schwarzpulver>();
-    private final Image eisenImage = new Image("file:rsc/schwarzpulver.jpg");
+    private final Image schwarzImage = new Image("file:rsc/schwarzpulver.png");
     private ImageView imageView = new ImageView();
     private static int anzahlSchwarzpulver = 0; 
     Grassblocks grassblocks;
@@ -16,7 +16,7 @@ public class Schwarzpulver {
     
 
 public Schwarzpulver (double xpos, double ypos){
-    this.imageView.setImage(eisenImage);
+    this.imageView.setImage(schwarzImage);
     this.imageView.setFitWidth(90);
     this.imageView.setFitHeight(90);
     this.imageView.setPreserveRatio(true);
@@ -75,16 +75,16 @@ private void startAbbauTimer() {
 private void prüfeAufAbbauClicks() {
     switch (abbauClicks) {
         case 4:
-            this.imageView.setImage(new Image("file:rsc/BaumA1.png"));
+            this.imageView.setImage(new Image("file:rsc/s1.png"));
             break;
         case 3:
-            this.imageView.setImage(new Image("file:rsc/BaumA2.png"));
+            this.imageView.setImage(new Image("file:rsc/s2.png"));
             break;
         case 2:
-            this.imageView.setImage(new Image("file:rsc/BaumA3.png"));
+            this.imageView.setImage(new Image("file:rsc/s3.png"));
             break;
         case 1:
-            this.imageView.setImage(new Image("file:rsc/BaumA4.png"));
+            this.imageView.setImage(new Image("file:rsc/s4.png"));
             break;
     }
 

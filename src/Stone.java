@@ -77,16 +77,16 @@ private void startAbbauTimer() {
 private void prüfeAufAbbauClicks() {
     switch (abbauClicks) {
         case 4:
-            this.imageView.setImage(new Image("file:rsc/BaumA1.png"));
+            this.imageView.setImage(new Image("file:rsc/stein1.png"));
             break;
         case 3:
-            this.imageView.setImage(new Image("file:rsc/BaumA2.png"));
+            this.imageView.setImage(new Image("file:rsc/stein22.png"));
             break;
         case 2:
-            this.imageView.setImage(new Image("file:rsc/BaumA3.png"));
+            this.imageView.setImage(new Image("file:rsc/stein3.png"));
             break;
         case 1:
-            this.imageView.setImage(new Image("file:rsc/BaumA4.png"));
+            this.imageView.setImage(new Image("file:rsc/stein4.png"));
             break;
     }
 
