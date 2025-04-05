@@ -36,7 +36,7 @@ public class TimerManager {
     private void updateTimer() {
         secondsElapsed++;
         updateLabel();
-        if (secondsElapsed >= 80) { // Hier kannst du die Zeit einstellen die der Spieler hat, in sek (20 sek zum Testen)
+        if (secondsElapsed >= 20) { // Hier kannst du die Zeit einstellen die der Spieler hat, in sek (20 sek zum Testen)
             timer.stop();
             showEndScreen();
         }
@@ -54,21 +54,8 @@ public class TimerManager {
     }
 
     private void showEndScreen() {
-        System.out.println("Spielzeit vorbei! Zeige Endbildschirm.");
-        
-        VBox endScreen = new VBox();
-        endScreen.setSpacing(20);
-        endScreen.setLayoutX(500);
-        endScreen.setLayoutY(250);
-        
-        Label endLabel = new Label("Spiel ist vorbei!");
-        Button restartButton = new Button("Neu starten");
-        
-        restartButton.setOnAction(e -> restartGame());
-        
-        endScreen.getChildren().addAll(endLabel, restartButton);
-        pane.getChildren().clear(); // Spielfeld leeren
-        pane.getChildren().add(endScreen); // Endbildschirm anzeigen
+        System.out.println("Spielzeit vorbei! Zeige Game Over.");
+        gameInstance.showGameOver();
     }
 
     public void restartGame() {

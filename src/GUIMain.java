@@ -33,122 +33,141 @@ public class GUIMain extends Application {
     private Label timeLabel; 
     private TimerManager timerManager;
     private Pane startScreenPane = new Pane();
-    private boolean isGamePaused = false;
+    private static boolean isGamePaused = false;
+    private Timeline fallCheck;
 
+    @Override
     public void start(Stage primaryStage) {
+        // IntroVideoPlayer.startVideo(primaryStage, () -> {
+        //     try {
+        //         startGameAfterVideo(primaryStage);
+        //     } catch (Exception e) {
+        //         System.err.println("Fehler beim Starten des Spiels: " + e.getMessage());
+        //         e.printStackTrace();
+        //     }
+        // });
         
-        System.out.println(charakter.getImageView());
-
-        Image backgroundImage = new Image("file:rsc/Background-2.0.3.png");
-        ImageView background = new ImageView(backgroundImage);
-        background.setFitWidth(1200);
-        background.setFitHeight(600);
-        pane.getChildren().add(background);
+        // Starte das Spiel direkt ohne Video
+        try {
+            startGameAfterVideo(primaryStage);
+        } catch (Exception e) {
+            System.err.println("Fehler beim Starten des Spiels: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    private void startGameAfterVideo(Stage primaryStage) {
+        try {
+            System.out.println(charakter.getImageView());
         
-        pane.getChildren().add(charakter.getImageView());
-
-        
-        Sounds sound = new Sounds();
-        Quests quests = new Quests(charakter);
-        
-        timeLabel = new Label();
-        timerManager = new TimerManager(primaryStage, timeLabel, this, pane);
-        timerManager.startTimer();
-
- 
-
-            // HBox zuerst leeren und dann die neue Anzahl hinzufügen
+            // Lade Hintergrundbild mit Fehlerbehandlung
+            Image backgroundImage = new Image("file:rsc/Background-2.0.3.png");
+            if (backgroundImage.isError()) {
+                throw new Exception("Hintergrundbild konnte nicht geladen werden");
+            }
             
+            ImageView background = new ImageView(backgroundImage);
+            background.setFitWidth(1200);
+            background.setFitHeight(600);
+            pane.getChildren().add(background);
+        
+            pane.getChildren().add(charakter.getImageView());
+        
+            Sounds sound = new Sounds();
+            Quests quests = new Quests(charakter);
+        
+            timeLabel = new Label();
+            timerManager = new TimerManager(primaryStage, timeLabel, this, pane);
+            timerManager.startTimer();
+        
             for (int i = 0; i < quantity; i++) {
                 Grassblocks grassblock = new Grassblocks(grassblocksAnzahl);
                 grassblocksAnzahl++;
-                 
                 pane.getChildren().add(grassblock.getImageView());
             }
-
-            
-            /* 
-            if(playerView.getX() + 60 >= grassElements.get(grassElements.size() - 1).getX() + 80) {
-                quantity++;
-                grassElements.add(new ImageView(grassImage));
-                grassElements.get(grassElements.size() - 1).setX(grassElements.get(grassElements.size() - 2).getX() + 100);
-                grassElements.get(grassElements.size() - 1).setY(400);
-                pane.getChildren().add(grassElements.get(grassElements.size() - 1));
-                System.out.println("hallo");
-            }
-            */
-
+        
             setupStartScreen();
             togglePause();
-
         
-        Scene scene = new Scene(pane, 1200, 600);
-        scene.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.ESCAPE) {
-                togglePause();
-            }
-            if (!isGamePaused) {
-                switch (event.getCode()) {
-                    case D:
-                        sound.playWalkSound();
-                        charakter.startMovingRight();
-                        if (!charakter.getImage().equals("manchenMoveR.png")) {
-                            charakter.setImage("manchenMoveR.png");
-                        }
-                        break;
-                    case A:
-                        charakter.startMovingLeft();
-                        if (!charakter.getImage().equals("manchenMoveL.png")) {
-                            charakter.setImage("manchenMoveL.png");
-                        }
-                        break;
-                    case SPACE:
-                        sound.playJumpSound();
-                        charakter.jumping();
-                        break;
-                        case E:
-                        charakter.setWerkzeug("axt");
-                        charakter.etwasAbbauen();
-                        charakter.setWerkzeug("Spitzhacke");
-                        charakter.SteinAbbauen();
-                        charakter.EisenAbbauen();
-                        charakter.SchwarzpulverAbbauen();
-        break;
-        case Q:
-                        charakter.getInventory().printWoodAmount();
-                        charakter.getInventory().printStoneAmount();
-                        charakter.getInventory().printEisenAmount();
-                        charakter.getInventory().printSchwarzpulverAmount();
-
-                    }
+            // Füge Timer für Fall-Überprüfung hinzu
+            fallCheck = new Timeline(new KeyFrame(Duration.millis(100), e -> checkPlayerFall()));
+            fallCheck.setCycleCount(Timeline.INDEFINITE);
+            fallCheck.play();
         
-            }
-        });
-
-        scene.setOnKeyReleased(event -> {
-            if (!isGamePaused) {
-                switch (event.getCode()) {
-                    case D:
-                        sound.stopAllSounds();
-                        charakter.stopMovingRight();
-                        charakter.setImage("manchen2R.png");
-                        break;
-                    case A:
-                        charakter.stopMovingLeft();
-                        charakter.setImage("manchen2L.png");
-                        break;
-                    case SPACE:
-                        charakter.stopJumping();
-                        break;
+            Scene scene = new Scene(pane, 1200, 600);
+            scene.setOnKeyPressed(event -> {
+                if (isGamePaused && event.getCode() != KeyCode.ESCAPE) return; // Ignoriere alle Tasten außer ESC wenn pausiert
+                
+                if (event.getCode() == KeyCode.ESCAPE) {
+                    togglePause();
                 }
-            }
-        });
-
-        pane.requestFocus();
-        primaryStage.setScene(scene);
-        primaryStage.setTitle("The Last Days");
-        primaryStage.show();
+                if (!isGamePaused) {
+                    switch (event.getCode()) {
+                        case D:
+                            sound.playWalkSound();
+                            charakter.startMovingRight();
+                            if (!charakter.getImage().equals("manchenMoveR.png")) {
+                                charakter.setImage("manchenMoveR.png");
+                            }
+                            break;
+                        case A:
+                            charakter.startMovingLeft();
+                            if (!charakter.getImage().equals("manchenMoveL.png")) {
+                                charakter.setImage("manchenMoveL.png");
+                            }
+                            break;
+                        case SPACE:
+                            sound.playJumpSound();
+                            charakter.jumping();
+                            break;
+                        case E:
+                            charakter.setWerkzeug("axt");
+                            charakter.etwasAbbauen();
+                            charakter.setWerkzeug("Spitzhacke");
+                            charakter.SteinAbbauen();
+                            charakter.EisenAbbauen();
+                            charakter.SchwarzpulverAbbauen();
+                            break;
+                        case Q:
+                            charakter.getInventory().printWoodAmount();
+                            charakter.getInventory().printStoneAmount();
+                            charakter.getInventory().printEisenAmount();
+                            charakter.getInventory().printSchwarzpulverAmount();
+                    }
+                }
+            });
+        
+            scene.setOnKeyReleased(event -> {
+                if (isGamePaused && event.getCode() != KeyCode.ESCAPE) return; // Ignoriere alle Tasten außer ESC wenn pausiert
+                
+                if (!isGamePaused) {
+                    switch (event.getCode()) {
+                        case D:
+                            sound.stopAllSounds();
+                            charakter.stopMovingRight();
+                            charakter.setImage("manchen2R.png");
+                            break;
+                        case A:
+                            charakter.stopMovingLeft();
+                            charakter.setImage("manchen2L.png");
+                            break;
+                        case SPACE:
+                            charakter.stopJumping();
+                            break;
+                    }
+                }
+            });
+        
+            pane.requestFocus();
+            primaryStage.setScene(scene);
+            primaryStage.setTitle("The Last Days");
+            primaryStage.show();
+        } catch (Exception e) {
+            System.err.println("Fehler beim Starten des Spiels: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
+    
 
     private void setupStartScreen() {
         startScreenPane.setPrefSize(1200, 600);
@@ -195,6 +214,11 @@ public class GUIMain extends Application {
         for (Schwarzpulver sp : Schwarzpulver.getSchwarzpulver()) {
             sp.pauseAbbauTimer();
         }
+
+        // Pausiere den Fall-Check Timer
+        if (fallCheck != null) {
+            fallCheck.pause();
+        }
     }
     
     
@@ -216,6 +240,11 @@ public class GUIMain extends Application {
 
         for (Schwarzpulver sp : Schwarzpulver.getSchwarzpulver()) {
             sp.resumeAbbauTimer();
+        }
+
+        // Starte den Fall-Check Timer wieder
+        if (fallCheck != null) {
+            fallCheck.play();
         }
     }
     
@@ -278,6 +307,8 @@ public class GUIMain extends Application {
     }
 
     public static void grassPlazieren(){
+        if (isGamePaused) return; // Verhindere Spawning während Pause/Game Over
+        
         if(charakter.getImageView().getX() + 100 >= Grassblocks.getLastX() + 100) {
                     
             Grassblocks grass = new Grassblocks(grassblocksAnzahl);
@@ -298,6 +329,8 @@ public class GUIMain extends Application {
         
     }
     private static void treePlazieren(){
+        if (isGamePaused) return; // Verhindere Spawning während Pause/Game Over
+        
         if (Math.random() < 0.2) {
             Tree tree = new Tree(treeIDCounter, Grassblocks.getLastX() - 60, Grassblocks.getLastY() - 345);
             pane.getChildren().add(tree.getImageView());
@@ -325,6 +358,8 @@ public class GUIMain extends Application {
 
 
     public static void steineSpawnen(){    
+        if (isGamePaused) return; // Verhindere Spawning während Pause/Game Over
+        
         if(Stone.getAnzahlSteine() < 100){       //Steine sollen sich immer wieder spawnen
         if(Math.random() < 0.2){
             Stone stone = new Stone(Grassblocks.getLastX() + 8 , Grassblocks.getLastY() - 40);
@@ -334,6 +369,8 @@ public class GUIMain extends Application {
     }
     }
     public static void eisenSpawnen(){    
+        if (isGamePaused) return; // Verhindere Spawning während Pause/Game Over
+        
         if(Eisen.getAnzahlEisen() < 100){       //Steine sollen sich immer wieder spawnen
         if(Math.random() < 0.1){
             Eisen eisen = new Eisen(Grassblocks.getLastX() + 8 , Grassblocks.getLastY() - 40);
@@ -344,6 +381,8 @@ public class GUIMain extends Application {
     }
 
     public static void schwarzpSpawnen(){    
+        if (isGamePaused) return; // Verhindere Spawning während Pause/Game Over
+        
         if(Schwarzpulver.getAnzahlSchwarzpulver() < 100){       //Steine sollen sich immer wieder spawnen
         if(Math.random() < 0.1){
             Schwarzpulver sp = new Schwarzpulver(Grassblocks.getLastX() + 8 , Grassblocks.getLastY() - 40);
@@ -401,5 +440,63 @@ public class GUIMain extends Application {
         return pane;
     }
 
+    private void checkPlayerFall() {
+        // Prüfe, ob der Spieler unter den untersten Block gefallen ist
+        if (!Grassblocks.getGrassblocks().isEmpty()) {
+            double lowestBlockY = Grassblocks.getGrassblocks().get(0).getImageView().getY();
+            if (charakter.getImageView().getY() > lowestBlockY + 100) { // 100 ist ein Puffer
+                showGameOver();
+            }
+        }
+    }
+
+    public void showGameOver() {
+        // Pausiere das Spiel
+        isGamePaused = true;
+        pauseGame();
+
+        // Erstelle Game-Over-Scene
+        Pane gameOverPane = new Pane();
+        gameOverPane.setPrefSize(1200, 600);
+        gameOverPane.setStyle("-fx-background-color: #FF0000;"); // Roter Hintergrund
+
+        // Game-Over-Text
+        Label gameOverLabel = new Label("GAME OVER");
+        gameOverLabel.setStyle("-fx-text-fill: white; -fx-font-size: 72px; -fx-font-weight: bold;");
+        gameOverLabel.setLayoutX(400);
+        gameOverLabel.setLayoutY(200);
+
+        // Restart-Button
+        Button restartButton = new Button("NEUSTART");
+        restartButton.setStyle("-fx-background-color: black; -fx-text-fill: white; -fx-font-size: 24px; -fx-border-color: white; -fx-border-width: 2px;");
+        restartButton.setLayoutX(500);
+        restartButton.setLayoutY(350);
+        restartButton.setPrefWidth(200);
+        restartButton.setPrefHeight(50);
+        
+        restartButton.setOnAction(e -> {
+            gameOverPane.setVisible(false);
+            isGamePaused = false; // Setze Pause zurück
+            resumeGame(); // Starte das Spiel wieder
+            restartGame();
+        });
+
+        gameOverPane.getChildren().addAll(gameOverLabel, restartButton);
+        pane.getChildren().add(gameOverPane);
+
+        // Deaktiviere Tastatureingaben, aber lasse ESC zu
+        Scene scene = pane.getScene();
+        if (scene != null) {
+            scene.setOnKeyPressed(event -> {
+                if (event.getCode() == KeyCode.ESCAPE) {
+                    togglePause();
+                }
+            });
+            scene.setOnKeyReleased(null);
+        }
+
+        // Pausiere alle aktiven Timers
+        pauseGame();
+    }
 
 }

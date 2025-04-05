@@ -65,7 +65,7 @@
             "request": "launch",
             "mainClass": "Main",
             "projectName": "TheLastDays_3faf7e8a",
-            "vmArgs": "--module-path C:/Users/sarah/Documents/Prg/TheLastDays/lib --add-modules javafx.controls,javafx.fxml"
+            "vmArgs": "--module-path C:/Users/sarah/Documents/Prg/TheLastDays/lib --add-modules javafx.controls,javafx.fxml,javafx.media"
         }
     ]
 }
