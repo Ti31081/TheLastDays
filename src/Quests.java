@@ -10,10 +10,10 @@ public class Quests {
     private Label textField;
     private QuestAnimations QA;
 
-    public Quests(Player charakter){
+    public Quests(Player charakter, TimerManager timemanager){
       
         this.textField = new Label();
-        this.QA = new QuestAnimations(charakter, this);
+        this.QA = new QuestAnimations(charakter, this, timemanager);
         this.textField.setPrefWidth(300);
         this.textField.setPrefHeight(120);
         this.textField.setLayoutX(900);

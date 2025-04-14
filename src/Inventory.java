@@ -1,91 +1,61 @@
+import java.util.ArrayList;
+
+import javafx.animation.AnimationTimer;
+import javafx.scene.control.Label;
+
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.text.Text;
+
 public class Inventory {
     private int wood;
     private int stone;
     private int iron;
     private int gunpowder;
-    private int gold;
-    private int diamond;
-    private int emerald;
-    private int ruby;
-    private int sapphire;
-    private int topaz;
-    private int amethyst;
-    private int copper;
-    private int silver;
-    private int platinum;
-    private int titanium;
-    private int uranium;
-    private int plutonium;
-    private int antimatter;
-    private int darkMatter;
-    private int lightMatter;
-    private int matter;
-    private int antimatterMatter;
-    private int darkMatterMatter;
-    private int lightMatterMatter;
-    private int matterMatter;
-    private int antimatterMatterMatter;
-    private int darkMatterMatterMatter;
-    private int lightMatterMatterMatter;
-    private int matterMatterMatter;
-    private int antimatterMatterMatterMatter;
-    private int darkMatterMatterMatterMatter;
-    private int lightMatterMatterMatterMatter;
-    private int matterMatterMatterMatter;
-    private int antimatterMatterMatterMatterMatter;
-    private int darkMatterMatterMatterMatterMatter;
-    private int lightMatterMatterMatterMatterMatter;
-    private int matterMatterMatterMatterMatter;
-    private int antimatterMatterMatterMatterMatterMatter;
-    private int darkMatterMatterMatterMatterMatterMatter;
-    private int lightMatterMatterMatterMatterMatterMatter;
-    private int matterMatterMatterMatterMatterMatter;
-    private int antimatterMatterMatterMatterMatterMatterMatter;
-    private int darkMatterMatterMatterMatterMatterMatterMatter;
+    private Label textFieldINV;
+    
 
     public Inventory(){
         this.wood = 0;
         this.stone = 0;
         this.iron = 0;
-        this.gold = 0;
-        this.diamond = 0;
-        this.emerald = 0;
-        this.ruby = 0;
-        this.sapphire = 0;
-        this.topaz = 0;
-        this.amethyst = 0;
-        this.copper = 0;
-        this.silver = 0;
-        this.platinum = 0;
-        this.titanium = 0;
-        this.uranium = 0;
-        this.plutonium = 0;
-        this.antimatter = 0;
-        this.darkMatter = 0;
-        this.lightMatter = 0;
-        this.matter = 0;
-        this.antimatterMatter = 0;
-        this.darkMatterMatter = 0;
-        this.lightMatterMatter = 0;
-        this.matterMatter = 0;
-        this.antimatterMatterMatter = 0;
-        this.darkMatterMatterMatter = 0;
-        this.lightMatterMatterMatter = 0;
-        this.matterMatterMatter = 0;
-        this.antimatterMatterMatterMatter = 0;
-        this.darkMatterMatterMatterMatter = 0;
-        this.lightMatterMatterMatterMatter = 0;
-        this.matterMatterMatterMatter = 0;
-        this.antimatterMatterMatterMatterMatter = 0;
-        this.darkMatterMatterMatterMatterMatter = 0;
-        this.lightMatterMatterMatterMatterMatter = 0;
-        this.matterMatterMatterMatterMatter = 0;
-        this.antimatterMatterMatterMatterMatterMatter = 0;
-        this.darkMatterMatterMatterMatterMatterMatter = 0;
-        this.lightMatterMatterMatterMatterMatterMatter = 0;
-        this.matterMatterMatterMatterMatterMatter = 0;
-        this.antimatterMatterMatterMatterMatterMatterMatter = 0;
-        this.darkMatterMatterMatterMatterMatterMatterMatter = 0;
+        this.gunpowder = 0;
+
+
+        this.textFieldINV = new Label();
+        
+        this.textFieldINV.setPrefWidth(150);
+        this.textFieldINV.setPrefHeight(100);
+        this.textFieldINV.setLayoutX(1050);
+        this.textFieldINV.setLayoutY(120);
+        //textFieldINV.setText("Gib etwas ein...\n\n Hallo");
+        textFieldINV.setText("Holz: ");
+        
+        // Styling über Inline-CSS
+        textFieldINV.setStyle("-fx-background-radius: 30; " +
+                            "-fx-background-color: rgba(6, 236, 102, 0.7);" + 
+                            "-fx-alignment: center; " +
+                            "-fx-font-family: impact; " + //schriftart ändern
+                            "-fx-font-Size: 10;" + 
+                           "-fx-border-radius: 30; " +
+                           "-fx-border-color: rgba(6, 124, 35, 0.7); " +
+                           "-fx-border-width: 4; " +
+                           "-fx-padding: 5;");
+    }
+
+    public Label gettextFieldINV(){
+        animationStart();
+        return textFieldINV;
+    }
+
+    private void animationStart(){
+        AnimationTimer bewegungTimer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                textFieldINV.setText("        Holz: " + wood + "\n      Stein: "+ stone + "\n      Eisen: " + iron +"\n Schwarzpulver: "+ gunpowder +"\n\n Craften mit C");
+            }
+        };
+        bewegungTimer.start();
     }
 
     public void addWood(int amount){
@@ -96,12 +66,24 @@ public class Inventory {
         System.out.println("Du hast " + this.wood + " Holz.");
     }
 
+    public void setWood(int amount){
+        this.wood = amount;
+    }
+
     public void addStone(int amount){
-        this.wood += amount;
+        this.stone += amount;
     }
 
     public void printStoneAmount() {
-        System.out.println("Du hast " + this.wood + " Stein.");
+        System.out.println("Du hast " + this.stone + " Stein.");
+    }
+
+    public int getStein(){
+        return stone;
+    }
+
+    public void setStein(int stein){
+        this.stone = stein;
     }
 
     public void addEisen(int amount){
@@ -112,12 +94,24 @@ public class Inventory {
         System.out.println("Du hast " + this.iron + " Eisen.");
     }
 
+    public int getEisen(){
+        return this.iron;
+    }
+
+    public void setEisen(int eisen){
+        this.iron = eisen;
+    }
+
     public void printSchwarzpulverAmount() {
         System.out.println("Du hast " + this.gunpowder + " Schwarzpulver.");
     }
 
     public void addSchwarupulver(int amount){
         this.gunpowder += amount;
+    }
+
+    public int getSchwarzpulver(){
+        return this.gunpowder;
     }
 
     public int getWood() {

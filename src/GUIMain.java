@@ -79,13 +79,16 @@ public class GUIMain extends Application {
             pane.getChildren().add(background);
         
             pane.getChildren().add(charakter.getImageView());
+            pane.getChildren().add(charakter.getInventory().gettextFieldINV());
         
             Sounds sound = new Sounds();
-            Quests quests = new Quests(charakter);
+            
         
             timeLabel = new Label();
             timerManager = new TimerManager(primaryStage, timeLabel, this, pane);
             timerManager.startTimer();
+
+            Quests quests = new Quests(charakter, timerManager);
         
             for (int i = 0; i < quantity; i++) {
                 Grassblocks grassblock = new Grassblocks(grassblocksAnzahl);
@@ -116,33 +119,69 @@ public class GUIMain extends Application {
                     case D:
                         sound.playWalkSound();
                         charakter.startMovingRight();
-                        if (!charakter.getImage().equals("manchenMoveR.png")) {
-                            charakter.setImage("manchenMoveR.png");
-                        }
+//                        if (!charakter.getImage().equals("manchenMoveR.png")) {
+//                            charakter.setImage("manchenMoveR.png");
+//                        }
                         break;
                     case A:
                         charakter.startMovingLeft();
-                        if (!charakter.getImage().equals("manchenMoveL.png")) {
-                            charakter.setImage("manchenMoveL.png");
-                        }
+//                        if (!charakter.getImage().equals("manchenMoveL.png")) {
+//                            charakter.setImage("manchenMoveL.png");
+//                        }
                         break;
                     case SPACE:
                         sound.playJumpSound();
                         charakter.jumping();
                         break;
                     case E:
-                        charakter.setWerkzeug("axt");
+//                        charakter.setWerkzeug("axt");
                         charakter.etwasAbbauen();
-                        charakter.setWerkzeug("Spitzhacke");
-                        charakter.SteinAbbauen();
-                        charakter.EisenAbbauen();
-                        charakter.SchwarzpulverAbbauen();
+//                        charakter.setWerkzeug("Spitzhacke");
+//                        charakter.SteinAbbauen();
+//                        charakter.EisenAbbauen();
+//                        charakter.SchwarzpulverAbbauen();
                         break;
                     case Q:
                         charakter.getInventory().printWoodAmount();
                         charakter.getInventory().printStoneAmount();
                         charakter.getInventory().printEisenAmount();
                         charakter.getInventory().printSchwarzpulverAmount();
+                        break;
+                        case C:
+                        if (charakter.getInventory().getWood() >= 70 && charakter.getInventory().getStein() >= 48) {
+                            charakter.setSteinPicke(true);
+                            charakter.getInventory().setWood(charakter.getInventory().getWood() - 70);
+                            charakter.getInventory().setStein(charakter.getInventory().getStein() - 48);
+
+                        }
+                        if (charakter.getInventory().getEisen() >= 35 && charakter.getInventory().getSchwarzpulver() >= 28) {
+                            charakter.setGun(true);
+                        }
+                        break;
+                    case DIGIT1:
+                        charakter.setWerkzeug("hand");
+                        charakter.ImageAktualisieren();
+                        charakter.aendereWidth(60);
+                        pane.getChildren().remove(charakter.getImageView());
+                        pane.getChildren().add(charakter.getImageView());
+                        break;
+                    case DIGIT2:
+                        charakter.setWerkzeug("axt");
+                        charakter.ImageAktualisieren();
+                        charakter.aendereWidth(80);
+                        pane.getChildren().remove(charakter.getImageView());
+                        pane.getChildren().add(charakter.getImageView());
+                        break;
+                    case DIGIT3:
+                        if (charakter.getSteinPicke()) {
+                            charakter.setWerkzeug("PickeS");
+                        }else{
+                        charakter.setWerkzeug("PickeH");
+                        }
+                        charakter.ImageAktualisieren();
+                        charakter.aendereWidth(80);
+                        pane.getChildren().remove(charakter.getImageView());
+                        pane.getChildren().add(charakter.getImageView());
                         break;
                 }
             });
@@ -153,11 +192,11 @@ public class GUIMain extends Application {
                         case D:
                             sound.stopAllSounds();
                             charakter.stopMovingRight();
-                            charakter.setImage("manchen2R.png");
+//                            charakter.setImage("manchen2R.png");
                             break;
                         case A:
                             charakter.stopMovingLeft();
-                            charakter.setImage("manchen2L.png");
+//                            charakter.setImage("manchen2L.png");
                             break;
                         case SPACE:
                             charakter.stopJumping();
@@ -388,9 +427,10 @@ public class GUIMain extends Application {
         playerView.setX(ersterBlock.getImageView().getX());
         playerView.setY(ersterBlock.getImageView().getY() - playerView.getFitHeight());
         pane.getChildren().add(playerView);
+        pane.getChildren().add(charakter.getInventory().gettextFieldINV());
     
         // Quests neu starten
-        quests = new Quests(charakter);
+        quests = new Quests(charakter, timerManager);
     
         // Timer & UI zurücksetzen
         timerManager.restartTimer();

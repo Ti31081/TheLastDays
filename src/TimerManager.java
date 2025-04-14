@@ -36,7 +36,7 @@ public class TimerManager {
     private void updateTimer() {
         secondsElapsed++;
         updateLabel();
-        if (secondsElapsed >= 20) { // Hier kannst du die Zeit einstellen die der Spieler hat, in sek (20 sek zum Testen)
+        if (secondsElapsed >= (60*8)) { // Hier kannst du die Zeit einstellen die der Spieler hat, in sek (20 sek zum Testen)
             timer.stop();
             showEndScreen();
         }
@@ -62,6 +62,31 @@ public class TimerManager {
         endScreen.setAlignment(javafx.geometry.Pos.CENTER);
         
         Label endLabel = new Label("GAME OVER");
+        endLabel.setStyle("-fx-text-fill: white; -fx-font-size: 72px; -fx-font-weight: bold;");
+        
+        Button restartButton = new Button("NEUSTART");
+        restartButton.setStyle("-fx-background-color: black; -fx-text-fill: white; -fx-font-size: 24px; -fx-border-color: white; -fx-border-width: 2px;");
+        restartButton.setPrefWidth(200);
+        restartButton.setPrefHeight(50);
+        
+        restartButton.setOnAction(e -> restartGame());
+        
+        endScreen.getChildren().addAll(endLabel, restartButton);
+        pane.getChildren().clear(); // Spielfeld leeren
+        pane.getChildren().add(endScreen); // Endbildschirm anzeigen
+    }
+
+    public void showWinScreen(){
+        System.out.println("Spielzeit vorbei! Zeige Endbildschirm.");
+        int minutes = secondsElapsed / 60;
+        int seconds = secondsElapsed % 60;
+        
+        VBox endScreen = new VBox();
+        endScreen.setPrefSize(1200, 600);
+        endScreen.setStyle("-fx-background-color:rgb(2, 172, 58);"); // Roter Hintergrund
+        endScreen.setAlignment(javafx.geometry.Pos.CENTER);
+        
+        Label endLabel = new Label("Du hast es Geschafft du konntest dich verteidigen \n Deine Zeit: " + minutes + "m " + seconds + "s");
         endLabel.setStyle("-fx-text-fill: white; -fx-font-size: 72px; -fx-font-weight: bold;");
         
         Button restartButton = new Button("NEUSTART");
